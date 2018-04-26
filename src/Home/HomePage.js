@@ -12,6 +12,7 @@ const HomePageWrapper = styled.main`
   height: 100vh;
   background-color: black;
   font-family: 'Alegreya Sans SC', sans-serif;
+  margin-bottom: 15vh;
 `
 
 const TitleWrapper = styled.h4`
@@ -30,37 +31,52 @@ const GridWrapper = styled.div`
 `;
 
 class HomePage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      awardsList: [],
-      artistesList: [],
-      albumsList: []
-    };
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     awardsList: [],
+  //     artistesList: [],
+  //     albumsList: []
+  //   };
+  // }
+
+  state = {
+    awardsList: [],
+    artistesList: [],
+    albumsList: []
   }
 
-  componentDidMount() {
-    axios.get('http://57a3ce01.ngrok.io/api/v1/awards').then(res => {
-      const { data } = res;
-      this.setState({
-        awardsList: data
-      });
-    });
-  };
+  // componentDidMount() {
+  //   axios.get('http://e61054d0.ngrok.io/api/v1/awards').then(res => {
+  //     const { data } = res;
+  //     this.setState({
+  //       awardsList: data
+  //     });
+  //   });
+  // };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.awardsList !== prevState.awardsList) {
+      return {
+        awardsList: nextProps.awardsList
+      }
+    }
+  };
 
   render() {
     const { awardsList } = this.state;
-    const renderAwards = awardsList.map((award, index) => {
-      return (
-        <GridListTile key={award.id} style={{ margin: '0 2.5px' }}>
-          <Link to={`/awards/${award.id}`}>
-            <img src={award.profile_img} style={{ width: '100%', height: '100%' }} />
-          </Link>
-          <GridListTileBar title={award.name} style={{ color: 'pink' }} />
-        </GridListTile>
-      );
-    });
+    // const { awardsList } = this.props;
+    // const renderAwards = awardsList.map((award, index) => {
+    //   return (
+    //     <GridListTile key={award.id} style={{ margin: '0 2.5px' }}>
+    //       <Link to={`/awards/${award.id}`}>
+    //         <img src={award.profile_img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    //       </Link>
+    //       <GridListTileBar title={award.name} style={{ color: 'pink' }} />
+    //     </GridListTile>
+    //   );
+    // });
+
 
     const renderArtistes = artistes.map((artiste, index) => {
       return (
@@ -84,11 +100,31 @@ class HomePage extends Component {
       <HomePageWrapper>
         <div>
           <TitleWrapper>Awards</TitleWrapper>
-          <GridWrapper>
+          {awardsList ? (
+            <GridWrapper>
+              <GridList style={{ flexWrap: 'nowrap', transform: 'translateZ(0)', marginLeft: 4 }} cols={2.5}>
+                {awardsList.map((award, index) => {
+                  return (
+                    <GridListTile key={award.id} style={{ margin: '0 2.5px' }}>
+                      <Link to={`/awards/${award.id}`}>
+                        <img src={award.profile_img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={award.name}/>
+                      </Link>
+                      <GridListTileBar title={award.name} style={{ color: 'pink' }} />
+                    </GridListTile>
+                  );
+                })}
+              </GridList>
+            </GridWrapper>
+          ) : (
+              <div>
+                <p style={{ color: 'white' }}>Waiting for data</p>
+              </div>
+            )}
+          {/*<GridWrapper>
             <GridList style={{ flexWrap: 'nowrap', transform: 'translateZ(0)', marginLeft: 4 }} cols={2.5}>
               {renderAwards}
             </GridList>
-          </GridWrapper>
+          </GridWrapper>*/}
         </div>
         <div>
           <TitleWrapper>Artistes</TitleWrapper>

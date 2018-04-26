@@ -1,17 +1,17 @@
 export const awards = [
   {
-    img: 'https://img.kpopmap.com/2017/09/news_header_AAA_logo.jpg',
-    title: 'Asia Artist Awards',
+    profile_img: 'https://img.kpopmap.com/2017/09/news_header_AAA_logo.jpg',
+    name: 'Asia Artist Awards',
     id: 1
   },
   {
-    img: 'https://0.soompi.io/wp-content/uploads/2017/02/02012912/mcountdown.jpg',
-    title: 'M Countdown',
+    profile_img: 'https://0.soompi.io/wp-content/uploads/2017/02/02012912/mcountdown.jpg',
+    name: 'M Countdown',
     id: 2
   },
   {
-    img: 'https://www.billboard.com/files/styles/article_main_image/public/media/inkigayo_logo2014_myxtv_exclusive_650-430.png',
-    title: 'Inkigayo',
+    profile_img: 'https://www.billboard.com/files/styles/article_main_image/public/media/inkigayo_logo2014_myxtv_exclusive_650-430.png',
+    name: 'Inkigayo',
     id: 3
   }
 ];

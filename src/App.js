@@ -7,6 +7,7 @@ import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
 import RegistrationPage from './Registration/RegistrationPage';
 import RegistrationSuccessPage from './Registration/RegistrationSuccess';
+import ProfilePage from './Profile/ProfilePage';
 import Footer from './components/Footer';
 import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
@@ -48,6 +49,7 @@ class App extends Component {
           <Route path="/register/success" exact component={RegistrationSuccessPage} />
           <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominee/:id" component={NomineePage} />
+          <Route path="/users/following" component={ProfilePage} />
         </Switch>
         <Footer />
       </div>

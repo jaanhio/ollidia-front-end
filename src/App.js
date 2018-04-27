@@ -53,7 +53,7 @@ class App extends Component {
           <Route path="/register" exact render={() => <RegistrationPage handleLogin={this.handleLogin} />} />
           <Route path="/register/success" exact component={RegistrationSuccessPage} />
           <Route path="/awards/:id" exact component={AwardsPage} />
-          <Route path="/awards/:id/nominee/:id" component={NomineePage} />
+          <Route path="/awards/:id/nominees/:id" component={NomineePage} />
           <Route path="/albums/:id/listings" exact component={ListingsPage} />
 
         </Switch>

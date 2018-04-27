@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { CircularProgress } from 'material-ui/Progress';
+import YouTube from 'react-youtube';
 
 const NomineePageWrapper = styled.main`
   position: relative;
@@ -66,7 +67,8 @@ class NomineePage extends Component {
       fetchingData: true
     });
     const { url } = this.props.match;
-    axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
+    // axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
+    axios.get(`https://57ac8db5.ngrok.io/api/v1/${url}`)
       .then(res => {
         const { data } = res;
         console.log(data);
@@ -87,15 +89,22 @@ class NomineePage extends Component {
       })
       .then(() => {
         console.log('finished fetching');
-        // setTimeout(() => {
-        //   this.setState({
-        //     fetchingData: false
-        //   })
-        // }, 1000);
         this.setState({
           fetchingData: false
         });
-      });;
+      })
+      .then(() => {
+        let youtubeFrame = document.getElementsByTagName('iframe')[0];
+        if (youtubeFrame) {
+          console.log('iframe has mounted');
+          console.log(youtubeFrame);
+          youtubeFrame.style.width = '100%';
+          youtubeFrame.style.height = '35vh';
+        }
+        else {
+          console.log('no frame found');
+        }
+      })
   }
 
   render() {
@@ -139,7 +148,7 @@ class NomineePage extends Component {
                 <BreakdownSection>
                   <TitleWrapper>Digital Sales</TitleWrapper>
                   <div>
-                    <img src={this.state.digitalSales.profile_img} style={{ width: '100%', objectFit: 'scale-down' }} />
+                    <img src={this.state.digitalSales.profile_img} style={{ width: '60%', objectFit: 'scale-down' }} />
                     <div style={{ width: '100%', display: 'flex', }}>
                       <div style={{ width: '50%' }}>
                         <Counts>{this.state.digitalSales.download_cnt}</Counts>
@@ -153,7 +162,7 @@ class NomineePage extends Component {
                   </div>
                   <div style={{ marginTop: 30 }}>
                     <TitleWrapper>Votes</TitleWrapper>
-                    <img src={this.state.mcountVotes.profile_img} style={{ width: '100%', objectFit: 'scale-down' }} />
+                    <img src={this.state.mcountVotes.profile_img} style={{ width: '80%', objectFit: 'scale-down' }} />
                     <div>
                       <Counts>{this.state.mcountVotes.votes}</Counts>
                       <Units>Votes</Units>
@@ -161,6 +170,18 @@ class NomineePage extends Component {
                   </div>
                   <div style={{ marginTop: 30 }}>
                     <TitleWrapper>YouTube Views</TitleWrapper>
+                    <div>
+                      <YouTube
+                        videoId={this.state.youtubeViews.video_id}
+                        opts={{
+                          height: '390',
+                          width: '640',
+                          playerVars: {
+                            autoplay: 1
+                          }
+                        }}
+                      />
+                    </div>
                     <div>
                       <Counts>{this.state.youtubeViews.view_cnt}</Counts>
                       <Units>Views</Units>
@@ -170,45 +191,6 @@ class NomineePage extends Component {
               </div>
             )
         }
-        {/*<img src={this.state.artiste.profile_img} style={{ width: '100%' }} />
-        <NomineeDetails>
-          <RankDetails>
-            <h3 style={{ margin: 0 }}>Rank {this.state.ranking.ranking}</h3>
-          </RankDetails>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h5 style={{ fontWeight: 700, fontSize: '5vw', margin: 0 }}>{this.state.song.name_eng}</h5>
-            <h5 style={{ fontWeight: 200, fontSze: '1.3em', margin: 0 }}>{this.state.artiste.name_eng} | {this.state.artiste.name_kor}</h5>
-          </div>
-      </NomineeDetails>*/}
-        {/*<div>
-          <div>
-            <TitleWrapper>Digital Sales</TitleWrapper>
-            <img src={this.state.digitalSales.profile_img} />
-            <div>
-              <div>
-                <p>{this.state.digitalSales.download_cnt}</p>
-                <p>Downloads</p>
-              </div>
-              <div>
-                <p>{this.state.digitalSales.stream_cnt}</p>
-                <p>Streams</p>
-              </div>
-            </div>
-          </div>
-          <div>
-            <TitleWrapper>Votes</TitleWrapper>
-            <img src={this.state.breakdown.mcountdown_votes.profile_img} />
-            <div>
-              <div>
-                <p>{this.state.breakdown.mcountdown_votes.votes}</p>
-                <p>Votes</p>
-              </div>
-            </div>
-          </div>
-          <div>
-            <TitleWrapper>YouTube Views</TitleWrapper>
-          </div>
-    </div>*/}
       </NomineePageWrapper>
     );
   }

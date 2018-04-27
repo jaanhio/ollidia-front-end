@@ -15,9 +15,9 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      awardsList: [],
-      artisteList: [],
-      albumsList: [],
+      awardsList: null,
+      artisteList: null,
+      albumsList: null,
       isLoggedIn: false
     };
   }
@@ -35,6 +35,11 @@ class App extends Component {
         awardsList: data
       });
     });
+    if (localStorage.getItem('client')) {
+      this.setState({
+        isLoggedIn: true
+      });
+    }
   }
 
   render() {
@@ -43,11 +48,11 @@ class App extends Component {
         <NavBar isLoggedIn={this.state.isLoggedIn} />
         <Switch>
           <Route path="/" exact render={() => <HomePage awardsList={this.state.awardsList} artisteList={this.state.artisteList} albumsList={this.state.albumsList} />} />
-          <Route path="/login" exact render={() => <LoginPage />} />
-          <Route path="/register" exact render={() => <RegistrationPage handleLogin={this.handleLogin}/>} />
+          <Route path="/login" exact render={() => <LoginPage handleLogin={this.handleLogin} />} />
+          <Route path="/register" exact render={() => <RegistrationPage handleLogin={this.handleLogin} />} />
           <Route path="/register/success" exact component={RegistrationSuccessPage} />
           <Route path="/awards/:id" exact component={AwardsPage} />
-          <Route path="/awards/:id/nominee/:id" component={NomineePage} />
+          <Route path="/awards/:id/nominees/:id" component={NomineePage} />
         </Switch>
         <Footer />
       </div>

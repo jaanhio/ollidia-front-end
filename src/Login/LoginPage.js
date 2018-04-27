@@ -132,6 +132,22 @@ class LoginPage extends Component {
       //     'uid': {uid}
       //   }
       // });
+      axios.post('https://ollida-api.herokuapp.com/auth/sign_in', {
+        email: this.state.email,
+        password: this.state.password
+      })
+      .then(res => {
+        console.log(res);
+        if (res.headers) {
+          localStorage.setItem("access-token", res.headers["access-token"]);
+          localStorage.setItem("client", res.headers.client);
+          localStorage.setItem("expiry", res.headers.expiry);
+          localStorage.setItem("token-type", res.headers["token-type"]);
+          localStorage.setItem("uid", res.headers.uid);
+          this.props.handleLogin();
+          this.props.history.push("/");
+        }
+      });
     }
   };
 
@@ -225,7 +241,8 @@ class LoginPage extends Component {
               backgroundColor: "#62CA99",
               color: "#FFFFFF",
               fontSize: "0.9rem",
-              marginTop: 22
+              marginTop: 22,
+              fontFamily: "'Alegreya Sans SC', sans-serif"
             }}
             type="submit"
             value="submit"
@@ -238,17 +255,18 @@ class LoginPage extends Component {
               bottom: 0,
               position: "absolute",
               width: "75vw",
-              fontFamily: "'Alegreya Sans SC', sans-serif"
             }}
           >
             {this.state.loading && <LinearProgress value={0} />}
           </div>
-          <Link to='/register' style={{ marginTop: 20, textDecoration: 'none', color: 'black' }}>Not yet a member? Join us here!</Link>
         </LoginFormWrapper>
+        <div style={{ position: 'relative', top: '12vh' }}>
+          <Link to='/register' style={{ marginTop: 20, textDecoration: 'none', color: 'black' }}>Not yet a member? Join us here!</Link>
+        </div>
       </LoginPageWrapper>
           )
         }
       }
 
-export default withStyles(styles)(LoginPage);
+export default withStyles(styles)(withRouter(LoginPage));
 

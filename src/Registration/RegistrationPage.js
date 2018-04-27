@@ -241,5 +241,5 @@ class RegistrationPage extends Component {
         }
       }
 
-export default withStyles(styles)(RegistrationPage);
+export default withStyles(styles)(withRouter(RegistrationPage));
 

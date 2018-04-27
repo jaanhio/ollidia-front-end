@@ -44,63 +44,43 @@ class NavBar extends Component {
           </Link>
         </Grid>
       );
-      if(location.pathname === "/login") {
-        return (
-         <NavBarWrapper>
-        <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
-          <Grid container spacing={0} style={{ maxWidth: 1050 }}>
-            <Grid item xs={2} sm={2} lg={2}>
-              <IconButton style={{ color: 'white' }}>
-                <MenuIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={8} sm={6} lg={6}>
-              <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
-            </Grid>
-            {/*<Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-23px' }}>
-                <PersonIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
-                <BasketIcon />
-              </IconButton>
-          </Grid>*/}
-          </Grid>
-        </AppBar>
-      </NavBarWrapper>
-        )
-      }
-      else {
-        return (
+    if (location.pathname === "/login") {
+      return (
         <NavBarWrapper>
-        <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
-          <Grid container spacing={0} style={{ maxWidth: 1050 }}>
-            <Grid item xs={2} sm={2} lg={2}>
-              <IconButton style={{ color: 'white' }}>
-                <MenuIcon />
-              </IconButton>
+          <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
+            <Grid container spacing={0} style={{ maxWidth: 1050 }}>
+              <Grid item xs={2} sm={2} lg={2}>
+                <IconButton style={{ color: 'white' }}>
+                  <MenuIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={8} sm={6} lg={6}>
+                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+              </Grid>
             </Grid>
-            <Grid item xs={8} sm={6} lg={6}>
-              <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+          </AppBar>
+        </NavBarWrapper>
+      )
+    }
+    else {
+      return (
+        <NavBarWrapper>
+          <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
+            <Grid container spacing={0} style={{ maxWidth: 1050 }}>
+              <Grid item xs={2} sm={2} lg={2}>
+                <IconButton style={{ color: 'white' }}>
+                  <MenuIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={8} sm={6} lg={6}>
+                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+              </Grid>
+              {renderLoggedInFeatures}
             </Grid>
-            {renderLoggedInFeatures}
-            {/*<Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-23px' }}>
-                <PersonIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
-                <BasketIcon />
-              </IconButton>
-          </Grid>*/}
-          </Grid>
-        </AppBar>
-      </NavBarWrapper>
-        )
-      }
+          </AppBar>
+        </NavBarWrapper>
+      )
+    }
   }
 }
 

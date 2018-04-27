@@ -18,7 +18,7 @@ const HomePageWrapper = styled.main`
 const TitleWrapper = styled.h4`
   color: white;
   font-size: 1.4em;
-  font-weight: 100;
+  font-weight: 500;
   text-align: left;
   margin-left: 14px;
 `;
@@ -31,29 +31,12 @@ const GridWrapper = styled.div`
 `;
 
 class HomePage extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     awardsList: [],
-  //     artistesList: [],
-  //     albumsList: []
-  //   };
-  // }
-
   state = {
     awardsList: [],
     artistesList: [],
     albumsList: []
   }
 
-  // componentDidMount() {
-  //   axios.get('http://e61054d0.ngrok.io/api/v1/awards').then(res => {
-  //     const { data } = res;
-  //     this.setState({
-  //       awardsList: data
-  //     });
-  //   });
-  // };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.awardsList !== prevState.awardsList) {

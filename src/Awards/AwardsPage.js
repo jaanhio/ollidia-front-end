@@ -8,6 +8,7 @@ import Select from 'material-ui/Select';
 import { withStyles } from 'material-ui/styles';
 import grey from 'material-ui/colors/grey';
 import { Link } from 'react-router-dom';
+import { CircularProgress } from 'material-ui/Progress';
 
 const styles = () => ({
   container: {
@@ -69,17 +70,15 @@ class AwardsPage extends Component {
     awardNominees: [],
     selectedCycle: 2,
     selectedResults: null,
+    fetchingData: false
   }
 
   componentDidMount() {
     console.log(this.props.match.params.id);
+    this.setState({
+      fetchingData: true
+    });
     const awardId = this.props.match.params.id;
-    // this.setState({
-    //   award: award1.award,
-    //   nominationCycles: award1.nomination_cycles,
-    //   maxCycleID: award1.max_cycyle_id,
-    //   awardNominees: award1.mcountdown_nominees
-    // });
     axios.get(`https://ollida-api.herokuapp.com/api/v1/awards/${awardId}`)
       .then(res => {
         const { data } = res;
@@ -89,7 +88,11 @@ class AwardsPage extends Component {
           nominationCycles: data.nomination_cycles,
           maxCycleID: data.max_cycle_id,
           awardNominees: data.nominees,
-          // selectedResults: data.nominees.filter(nominee => { return nominee.cycle_id === parseInt(2, 10); }).sort((a, b) => { return a.ranking.ranking - b.ranking.ranking; })
+        });
+      })
+      .then(() => {
+        this.setState({
+          fetchingData: false
         });
       });
   }
@@ -112,7 +115,7 @@ class AwardsPage extends Component {
 
   render() {
     const { classes, match } = this.props;
-    const { award, nominationCycles, maxCycleID, awardNominees, selectedResults } = this.state;
+    const { award, nominationCycles, maxCycleID, awardNominees, selectedResults, fetchingData } = this.state;
     const renderAvailableDates = this.state.nominationCycles.map((cycle, index) => {
       return (
         <option key={cycle.id} value={cycle.id}>{cycle.start_date} - {cycle.end_date}</option>
@@ -124,7 +127,7 @@ class AwardsPage extends Component {
         return (
           <Link to={`${this.props.match.url}/nominees/${result.nominee_id}`} style={{ textDecoration: 'none', color: 'white' }} key={result.nominee_id}>
             <div style={{ display: 'flex', margin: '10px 17px', alignItems: 'center' }}>
-              <img src={result.artiste.profile_img} style={{ width: '50vw', objectFit: 'scale-down' }} alt={result.artiste.name_eng}/>
+              <img src={result.artiste.profile_img} style={{ width: '50vw', objectFit: 'scale-down' }} alt={result.artiste.name_eng} />
               <div style={{ display: 'flex', flexDirection: 'column', height: '18vh', marginLeft: 10, width: '50vw', justifyContent: 'center' }}>
                 <ResultDetails><span style={{ fontWeight: 700, fontSize: '1.8em' }}>{result.ranking.ranking}</span></ResultDetails>
                 <ResultDetails>Score: {result.ranking.score}</ResultDetails>
@@ -143,7 +146,54 @@ class AwardsPage extends Component {
 
     return (
       <AwardPageWrapper>
-        <img src={award.profile_img} style={{ width: '100%' }} alt={award.name}/>
+        {
+          fetchingData ? (
+            <div style={{
+              display: 'flex',
+              height: '100vh',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <CircularProgress style={{ width: '20vw', height: '20vw' }} />
+            </div>
+          ) : (
+              <div>
+                <img src={award.profile_img} style={{ width: '100%' }} alt={award.name} />
+                <AwardDescription>{award.description}</AwardDescription>
+                <CriteriaSection>
+                  <h6 style={{ textAlign: 'left', fontSize: '1.3em', fontWeight: 600 }}>Ranking table</h6>
+                  <DateSelection>
+                    <h6 style={{ textAlign: 'left', fontSize: '1em', fontWeight: 400, marginTop: 11 }}>Results for</h6>
+                    <FormControl style={{ marginLeft: 14, position: 'relative', top: -10, fontWeight: 100 }}>
+                      <InputLabel htmlFor='result-date' FormLabelClasses={{
+                        root: classes.cssLabel,
+                        focused: classes.cssFocused,
+                      }}>Date Selection</InputLabel>
+                      <Select
+                        native
+                        value={this.state.selectedCycle}
+                        onChange={this.handleDateChange}
+                        inputProps={{
+                          id: 'result-date',
+                        }}
+                        style={{
+                          color: 'white',
+                          borderBottom: '1px solid white'
+                        }}
+                      >
+                        <option value="" />
+                        {renderAvailableDates}
+                      </Select>
+                    </FormControl>
+                  </DateSelection>
+                </CriteriaSection>
+                <ResultSection>
+                  {renderResults}
+                </ResultSection>
+              </div>
+            )
+        }
+        {/*<img src={award.profile_img} style={{ width: '100%' }} alt={award.name}/>
         <AwardDescription>{award.description}</AwardDescription>
         <CriteriaSection>
           <h6 style={{ textAlign: 'left', fontSize: '1.3em', fontWeight: 600 }}>Ranking table</h6>
@@ -174,7 +224,7 @@ class AwardsPage extends Component {
         </CriteriaSection>
         <ResultSection>
           {renderResults}
-        </ResultSection>
+              </ResultSection>*/}
       </AwardPageWrapper>
     );
   }

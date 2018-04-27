@@ -3,6 +3,7 @@ import './App.css';
 import NavBar from './components/Navbar';
 import HomePage from './Home/HomePage';
 import AwardsPage from './Awards/AwardsPage';
+import ListingsPage from './Listings/ListingsPage';
 import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
 import RegistrationPage from './Registration/RegistrationPage';
@@ -48,6 +49,8 @@ class App extends Component {
           <Route path="/register/success" exact component={RegistrationSuccessPage} />
           <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominee/:id" component={NomineePage} />
+
+          <Route path="/albums/:id/listings" exact component={ListingsPage} />
         </Switch>
         <Footer />
       </div>

@@ -89,7 +89,7 @@ class NomineePage extends Component {
     });
     const { url } = this.props.match;
     // axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
-    axios.get(`https://57ac8db5.ngrok.io/api/v1/${url}`)
+    axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
       .then(res => {
         const { data } = res;
         console.log(data);

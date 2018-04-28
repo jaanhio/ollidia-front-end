@@ -45,12 +45,14 @@ class NavBar extends Component {
     console.log('logging out');
     localStorage.clear();
     this.props.handleLogout();
-    this.setState({
-      anchorEl: null
-    });
+    this.handleMenuClose();
     this.props.history.push('/logout/success');
-    // this.props.handleLogout();
-  }
+  };
+
+  handleProfileClick = () => {
+    this.handleMenuClose();
+    this.props.history.push('/users/profile');
+  };
 
   render() {
     const { isLoggedIn, location } = this.props;
@@ -73,7 +75,7 @@ class NavBar extends Component {
             onClose={this.handleMenuClose}
             transition={Fade}
           >
-            <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={this.handleProfileClick}>Profile</MenuItem>
             <MenuItem onClick={this.handleLogoutClick}>Log Out</MenuItem>
           </Menu>
           {/*<IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>

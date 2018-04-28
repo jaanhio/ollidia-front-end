@@ -8,6 +8,7 @@ import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
 import RegistrationPage from './Registration/RegistrationPage';
 import RegistrationSuccessPage from './Registration/RegistrationSuccess';
+import ProfilePage from './Profile/ProfilePage';
 import LoginSuccessPage from './Login/LoginSuccess';
 import LogoutSuccessPage from './Login/LogoutSuccess';
 import Footer from './components/Footer';
@@ -64,6 +65,7 @@ class App extends Component {
           <Route path="/logout/success" exact component={LogoutSuccessPage} />
           <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominees/:id" component={NomineePage} />
+          <Route path="/users/profile" component={ProfilePage} />
           <Route path="/albums/:id/listings" exact component={ListingsPage} />
         </Switch>
         <Footer />

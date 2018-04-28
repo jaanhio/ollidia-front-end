@@ -7,6 +7,8 @@ import Grid from 'material-ui/Grid';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
+import Menu, { MenuItem } from 'material-ui/Menu';
+import Fade from 'material-ui/transitions/Fade';
 import MenuIcon from 'material-ui-icons/Menu';
 import PersonIcon from 'material-ui-icons/Person';
 import BasketIcon from 'material-ui-icons/ShoppingBasket';
@@ -19,22 +21,64 @@ const NavBarWrapper = styled.nav`
 `
 
 class NavBar extends Component {
+  state = {
+    anchorEl: null
+  };
 
   handleImgClick = () => {
     this.props.history.push('/');
+  };
+
+  handleMenuClick = e => {
+    this.setState({
+      anchorEl: e.currentTarget
+    });
+  };
+
+  handleMenuClose = e => {
+    this.setState({
+      anchorEl: null
+    });
+  };
+
+  handleLogoutClick = () => {
+    console.log('logging out');
+    localStorage.clear();
+    this.props.handleLogout();
+    this.setState({
+      anchorEl: null
+    });
+    this.props.history.push('/logout/success');
+    // this.props.handleLogout();
   }
 
   render() {
     const { isLoggedIn, location } = this.props;
+    const { anchorEl } = this.state;
     const renderLoggedInFeatures = isLoggedIn ? (
       <Grid item xs={2} sm={2} lg={2}>
         <div style={{ display: 'flex', position: 'relative', right: 13 }}>
-          <IconButton style={{ color: 'white', position: 'relative', left: '-23px' }}>
+          <IconButton
+            style={{ color: 'white', position: 'relative', right: '-20px' }}
+            aria-owns={anchorEl ? 'fade-menu' : null}
+            aria-haspopup="true"
+            onClick={this.handleMenuClick}
+          >
             <PersonIcon />
           </IconButton>
-          <IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
+          <Menu
+            id='fade-menu'
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this.handleMenuClose}
+            transition={Fade}
+          >
+            <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
+            <MenuItem onClick={this.handleLogoutClick}>Log Out</MenuItem>
+          </Menu>
+          {/*<IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
             <BasketIcon />
-          </IconButton>
+    </IconButton>*/}
         </div>
       </Grid>
     ) : (
@@ -44,63 +88,43 @@ class NavBar extends Component {
           </Link>
         </Grid>
       );
-      if(location.pathname === "/login") {
-        return (
-         <NavBarWrapper>
-        <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
-          <Grid container spacing={0} style={{ maxWidth: 1050 }}>
-            <Grid item xs={2} sm={2} lg={2}>
-              <IconButton style={{ color: 'white' }}>
-                <MenuIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={8} sm={6} lg={6}>
-              <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
-            </Grid>
-            {/*<Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-23px' }}>
-                <PersonIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
-                <BasketIcon />
-              </IconButton>
-          </Grid>*/}
-          </Grid>
-        </AppBar>
-      </NavBarWrapper>
-        )
-      }
-      else {
-        return (
+    if (location.pathname === "/login") {
+      return (
         <NavBarWrapper>
-        <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
-          <Grid container spacing={0} style={{ maxWidth: 1050 }}>
-            <Grid item xs={2} sm={2} lg={2}>
-              <IconButton style={{ color: 'white' }}>
-                <MenuIcon />
-              </IconButton>
+          <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
+            <Grid container spacing={0} style={{ maxWidth: 1050 }}>
+              <Grid item xs={2} sm={2} lg={2}>
+                <IconButton style={{ color: 'white' }}>
+                  <MenuIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={8} sm={6} lg={6}>
+                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+              </Grid>
             </Grid>
-            <Grid item xs={8} sm={6} lg={6}>
-              <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+          </AppBar>
+        </NavBarWrapper>
+      )
+    }
+    else {
+      return (
+        <NavBarWrapper>
+          <AppBar position='fixed' style={{ backgroundColor: 'black' }}>
+            <Grid container spacing={0} style={{ maxWidth: 1050 }}>
+              <Grid item xs={2} sm={2} lg={2}>
+                <IconButton style={{ color: 'white' }}>
+                  <MenuIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={8} sm={6} lg={6}>
+                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+              </Grid>
+              {renderLoggedInFeatures}
             </Grid>
-            {renderLoggedInFeatures}
-            {/*<Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-23px' }}>
-                <PersonIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={1} sm={2} lg={2}>
-              <IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
-                <BasketIcon />
-              </IconButton>
-          </Grid>*/}
-          </Grid>
-        </AppBar>
-      </NavBarWrapper>
-        )
-      }
+          </AppBar>
+        </NavBarWrapper>
+      )
+    }
   }
 }
 

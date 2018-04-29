@@ -146,6 +146,14 @@ class LoginPage extends Component {
             localStorage.setItem("uid", res.headers.uid);
             this.props.handleLogin();
             this.props.history.push("/login/success");
+            axios.get('https://ollida-api.herokuapp.com/api/v1/users/following').then(res => {
+              console.log(res.data);
+              console.log('following');
+              localStorage.setItem('userName', res.data.user_name);
+              localStorage.setItem('followings', JSON.stringify(res.data.followings.map(following => {
+                return following.nominee_id;
+              })));
+            });
           }
         });
     }

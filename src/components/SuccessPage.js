@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 
 const SuccessPageWrapper = styled.main`
   display: flex;
@@ -10,7 +11,7 @@ const SuccessPageWrapper = styled.main`
   height: 100vh;
 `;
 
-class LoginSuccessPage extends Component {
+class SuccessPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -37,13 +38,16 @@ class LoginSuccessPage extends Component {
   };
 
   render() {
+    const { type } = this.props;
     return (
       <SuccessPageWrapper>
-        <h4>Successfully logged in!</h4>
+        {type === 'register' && <h4>Thank you for signing up!</h4>}
+        {type === 'login' && <h4>Successfully logged in!</h4>}
+        {type === 'logout' && <h4>You have logged out.</h4>}
         <h6>You will be redirected to the home page in {this.state.timer}s...</h6>
       </SuccessPageWrapper>
     );
   }
 }
 
-export default LoginSuccessPage;
+export default withRouter(SuccessPage);

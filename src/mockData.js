@@ -28,10 +28,34 @@ export const artistes = [
   {
     img: 'https://ih0.redbubble.net/image.272651927.1989/flat,800x800,075,f.u1.jpg',
     name: 'Super Junior'
+  },
+  {
+    img: 'https://ih0.redbubble.net/image.272390006.3312/flat,800x800,075,f.u1.jpg',
+    name: 'Big Bang'
+  },
+  {
+    img: 'https://ih0.redbubble.net/image.272396979.3528/flat,800x800,070,f.u1.jpg',
+    name: 'SNSD'
+  },
+  {
+    img: 'https://ih0.redbubble.net/image.272651927.1989/flat,800x800,075,f.u1.jpg',
+    name: 'Super Junior'
   }
 ];
 
 export const albums = [
+  {
+    img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/E_%28Big_Bang_album%29.jpg/1280px-E_%28Big_Bang_album%29.jpg',
+    name: 'Big Bang E'
+  },
+  {
+    img: 'https://upload.wikimedia.org/wikipedia/commons/7/74/D_%28Big_Bang_album%29.jpg',
+    name: 'Big Bang D'
+  },
+  {
+    img: 'http://3.bp.blogspot.com/_mupIVJbjvuU/TECnLRT_GFI/AAAAAAAAFDo/6nlqeisP6Qg/s1600/Girls%27+Generation+(SNSD)+-+Debut+Album+(FanMade+Album+Cover)+Made+by+Panda.png',
+    name: 'Girls Generation'
+  },
   {
     img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/E_%28Big_Bang_album%29.jpg/1280px-E_%28Big_Bang_album%29.jpg',
     name: 'Big Bang E'

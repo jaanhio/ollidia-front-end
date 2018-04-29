@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import { award1 } from '../mockData';
 import { FormControl } from 'material-ui/Form';
 import { InputLabel } from 'material-ui/Input';
 import Select from 'material-ui/Select';
@@ -114,8 +113,8 @@ class AwardsPage extends Component {
   }
 
   render() {
-    const { classes, match } = this.props;
-    const { award, nominationCycles, maxCycleID, awardNominees, selectedResults, fetchingData } = this.state;
+    const { classes } = this.props;
+    const { award, selectedResults, fetchingData } = this.state;
     const renderAvailableDates = this.state.nominationCycles.map((cycle, index) => {
       return (
         <option key={cycle.id} value={cycle.id}>{cycle.start_date} - {cycle.end_date}</option>
@@ -140,7 +139,7 @@ class AwardsPage extends Component {
       })
     ) : (
         <div>
-          <p>there is not selected results</p>
+          <p>Select which results to display.</p>
         </div>
       );
 

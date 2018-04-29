@@ -4,10 +4,12 @@ import NavBar from './components/Navbar';
 import HomePage from './Home/HomePage';
 import AwardsPage from './Awards/AwardsPage';
 import ListingsPage from './Listings/ListingsPage';
+import MyListingsPage from './Listings/MyListingsPage';
 import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
 import RegistrationPage from './Registration/RegistrationPage';
 import SuccessPage from './components/SuccessPage';
+import ProfilePage from './Profile/ProfilePage';
 import Footer from './components/Footer';
 import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
@@ -70,7 +72,10 @@ class App extends Component {
           <Route path="/logout/success" exact render={() => <SuccessPage type="logout" />} />
           <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominees/:id" exact render={() => <NomineePage isLoggedIn={isLoggedIn} userFollowings={userFollowings} />} />
+          <Route path="/users/profile" component={ProfilePage} />
           <Route path="/albums/:id/listings" exact component={ListingsPage} />
+          <Route path="/mylistings" exact component={MyListingsPage} />
+
         </Switch>
         <Footer />
       </div>

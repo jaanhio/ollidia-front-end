@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { CircularProgress } from 'material-ui/Progress';
+import BuyMusicIcon from 'material-ui-icons/LibraryMusic';
 import YouTube from 'react-youtube';
+import { Link } from 'react-router-dom';
 
 const NomineePageWrapper = styled.main`
   position: relative;
@@ -16,18 +18,18 @@ const NomineeDetails = styled.div`
   display: flex;
   margin: 10px 25px;
   align-items: center;
+  flex-direction: column;
 `;
 
 const RankDetails = styled.div`
   font-family: 'Alegreya Sans SC', sans-serif;
-  width: 50vw;
   font-size: 6vw;
   text-align: left;
 `;
 
 const TitleWrapper = styled.h4`
   font-family: 'Alegreya Sans SC', sans-serif;
-  text-align: left;
+  text-align: center;
   font-size: 1.6em;
   font-weight: 300;
   margin: 10px 0px;
@@ -35,11 +37,11 @@ const TitleWrapper = styled.h4`
 
 const BreakdownSection = styled.div`
   font-family: 'Alegreya Sans SC', sans-serif;
-  margin: 10px 17px;
+  margin: 30px 17px;
 `
 
 const Counts = styled.p`
-  margin: 10px 0px;
+  margin: -4px 0px;
   font-size: 10vw;
 `
 
@@ -47,6 +49,24 @@ const Units = styled.p`
   margin: 0;
   font-size: 1.1em;
 `
+
+const ProviderLinks = styled.a`
+  color: white;
+  margin: 0 10px;
+  font-size: 1.3em;
+`
+const YouTubeSection = styled.div`
+  margin-top: 11vh;
+`
+
+const MCountSection = styled.div`
+  margin-top: 11vh;
+`
+
+const AlbumSection = styled.div`
+  margin-top: 11vh;
+`
+
 
 class NomineePage extends Component {
   state = {
@@ -58,6 +78,7 @@ class NomineePage extends Component {
     digitalSales: [],
     youtubeViews: [],
     mcountVotes: [],
+    album: [],
     fetchingData: false
   }
 
@@ -68,7 +89,7 @@ class NomineePage extends Component {
     });
     const { url } = this.props.match;
     // axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
-    axios.get(`https://57ac8db5.ngrok.io/api/v1/${url}`)
+    axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
       .then(res => {
         const { data } = res;
         console.log(data);
@@ -81,6 +102,7 @@ class NomineePage extends Component {
           ranking: data.nominee.ranking,
           song: data.nominee.song,
           nominee: data.nominee,
+          album: data.nominee.breakdown.album_volume,
           // digitalSales: data.nominee.breakdown.digital_sales,
           youtubeViews: data.nominee.breakdown.youtube_views,
           mcountVotes: data.nominee.breakdown.mcountdown_votes
@@ -89,11 +111,13 @@ class NomineePage extends Component {
       })
       .then(() => {
         console.log('finished fetching');
+        console.log(Object.keys(this.state.digitalSales.digital_service_providers));
         this.setState({
           fetchingData: false
         });
       })
       .then(() => {
+        // responsive youtube iframe
         let youtubeFrame = document.getElementsByTagName('iframe')[0];
         if (youtubeFrame) {
           console.log('iframe has mounted');
@@ -109,18 +133,13 @@ class NomineePage extends Component {
 
   render() {
     const { nominee, fetchingData } = this.state;
-    console.log(this.state.digitalSales.profile_img);
-    {
-      fetchingData ? (
-        <div style={{ color: 'white' }}>
-          <p>test</p>
-        </div>
-      ) : (
-          <div style={{ color: 'white' }}>
-            <p>nono</p>
-          </div>
-        )
-    }
+    console.log(this.state.digitalSales.digital_service_providers);
+    // const providersArray = Object.keys(this.state.digitalSales.digitalSales);
+    // console.log(providersArray);
+    // const renderDigitalServer = () => {
+    //   for ()
+    // }
+
     return (
       <NomineePageWrapper>
         {
@@ -159,16 +178,33 @@ class NomineePage extends Component {
                         <Units>Streams</Units>
                       </div>
                     </div>
+                    <div>
+                      <h4 style={{ marginBottom: 0 }}>Listen on:</h4>
+                      <div>
+                        {this.state.digitalSales.digital_service_providers && (
+                          Object.keys(this.state.digitalSales.digital_service_providers).map((provider, index) => {
+                            return (
+                              <ProviderLinks href={this.state.digitalSales.digital_service_providers[provider]} key={provider} target='_blank'>{provider}</ProviderLinks>
+                            );
+                          })
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div style={{ marginTop: 30 }}>
+                  <AlbumSection>
+                    <TitleWrapper>Album</TitleWrapper>
+                    <h4 style={{ marginBottom: 0 }}>Buy album:</h4>
+                    <Link to={`/albums/${this.state.song.album_id}/listings`} style={{ color: 'white', position: 'relative', top: 10 }}><BuyMusicIcon /></Link>
+                  </AlbumSection>
+                  <MCountSection>
                     <TitleWrapper>Votes</TitleWrapper>
                     <img src={this.state.mcountVotes.profile_img} style={{ width: '80%', objectFit: 'scale-down' }} />
                     <div>
                       <Counts>{this.state.mcountVotes.votes}</Counts>
                       <Units>Votes</Units>
                     </div>
-                  </div>
-                  <div style={{ marginTop: 30 }}>
+                  </MCountSection>
+                  <YouTubeSection>
                     <TitleWrapper>YouTube Views</TitleWrapper>
                     <div>
                       <YouTube
@@ -186,7 +222,7 @@ class NomineePage extends Component {
                       <Counts>{this.state.youtubeViews.view_cnt}</Counts>
                       <Units>Views</Units>
                     </div>
-                  </div>
+                  </YouTubeSection>
                 </BreakdownSection>
               </div>
             )

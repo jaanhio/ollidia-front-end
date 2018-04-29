@@ -136,18 +136,18 @@ class LoginPage extends Component {
         email: this.state.email,
         password: this.state.password
       })
-      .then(res => {
-        console.log(res);
-        if (res.headers) {
-          localStorage.setItem("access-token", res.headers["access-token"]);
-          localStorage.setItem("client", res.headers.client);
-          localStorage.setItem("expiry", res.headers.expiry);
-          localStorage.setItem("token-type", res.headers["token-type"]);
-          localStorage.setItem("uid", res.headers.uid);
-          this.props.handleLogin();
-          this.props.history.push("/");
-        }
-      });
+        .then(res => {
+          console.log(res);
+          if (res.headers) {
+            localStorage.setItem("access-token", res.headers["access-token"]);
+            localStorage.setItem("client", res.headers.client);
+            localStorage.setItem("expiry", res.headers.expiry);
+            localStorage.setItem("token-type", res.headers["token-type"]);
+            localStorage.setItem("uid", res.headers.uid);
+            this.props.handleLogin();
+            this.props.history.push("/login/success");
+          }
+        });
     }
   };
 
@@ -264,9 +264,9 @@ class LoginPage extends Component {
           <Link to='/register' style={{ marginTop: 20, textDecoration: 'none', color: 'black' }}>Not yet a member? Join us here!</Link>
         </div>
       </LoginPageWrapper>
-          )
-        }
-      }
+    )
+  }
+}
 
 export default withStyles(styles)(withRouter(LoginPage));
 

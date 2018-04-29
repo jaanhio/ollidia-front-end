@@ -7,6 +7,8 @@ import Grid from 'material-ui/Grid';
 import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
+import Menu, { MenuItem } from 'material-ui/Menu';
+import Fade from 'material-ui/transitions/Fade';
 import MenuIcon from 'material-ui-icons/Menu';
 import PersonIcon from 'material-ui-icons/Person';
 import BasketIcon from 'material-ui-icons/ShoppingBasket';
@@ -19,22 +21,66 @@ const NavBarWrapper = styled.nav`
 `
 
 class NavBar extends Component {
+  state = {
+    anchorEl: null
+  };
 
   handleImgClick = () => {
     this.props.history.push('/');
-  }
+  };
+
+  handleMenuClick = e => {
+    this.setState({
+      anchorEl: e.currentTarget
+    });
+  };
+
+  handleMenuClose = e => {
+    this.setState({
+      anchorEl: null
+    });
+  };
+
+  handleLogoutClick = () => {
+    console.log('logging out');
+    localStorage.clear();
+    this.props.handleLogout();
+    this.handleMenuClose();
+    this.props.history.push('/logout/success');
+  };
+
+  handleProfileClick = () => {
+    this.handleMenuClose();
+    this.props.history.push('/users/profile');
+  };
 
   render() {
     const { isLoggedIn, location } = this.props;
+    const { anchorEl } = this.state;
     const renderLoggedInFeatures = isLoggedIn ? (
       <Grid item xs={2} sm={2} lg={2}>
         <div style={{ display: 'flex', position: 'relative', right: 13 }}>
-          <IconButton style={{ color: 'white', position: 'relative', left: '-23px' }}>
+          <IconButton
+            style={{ color: 'white', position: 'relative', right: '-20px' }}
+            aria-owns={anchorEl ? 'fade-menu' : null}
+            aria-haspopup="true"
+            onClick={this.handleMenuClick}
+          >
             <PersonIcon />
           </IconButton>
-          <IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
+          <Menu
+            id='fade-menu'
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={this.handleMenuClose}
+            transition={Fade}
+          >
+            <MenuItem onClick={this.handleProfileClick}>Profile</MenuItem>
+            <MenuItem onClick={this.handleLogoutClick}>Log Out</MenuItem>
+          </Menu>
+          {/*<IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
             <BasketIcon />
-          </IconButton>
+    </IconButton>*/}
         </div>
       </Grid>
     ) : (

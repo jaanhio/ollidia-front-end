@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
-// import { award1 } from '../mockData'; // to change
-
 import { FormControl } from 'material-ui/Form';
 import { InputLabel } from 'material-ui/Input';
 import Select from 'material-ui/Select';
 import { withStyles } from 'material-ui/styles';
 import grey from 'material-ui/colors/grey';
 import { Link } from 'react-router-dom';
+
+import Button from 'material-ui/Button';
 
 const styles = () => ({
   container: {
@@ -29,7 +29,6 @@ const styles = () => ({
   },
 });
 
-
 const ListingPageWrapper = styled.main`
   position: relative;
   top: 50px;
@@ -37,24 +36,24 @@ const ListingPageWrapper = styled.main`
   margin-bottom: 15vh;
 `
 const ListingSection = styled.div`
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Alegreya Sans SC', sans-serif;
   font-weight: 200;
+  color: black;
+`
+const AlbumHeading = styled.h3`
+  font-family: 'Alegreya Sans SC', sans-serif;
+  text-align: left;
+  font-size: 1.6em;
+  font-weight: 300;
+  margin-left: 17px;
 `
 
-// const SectionHeader = styled.div`
-//   display: inline-block;
-//   font-family: 'Nunito', sans-serif;
-//   font-weight: 200;
-//   height: 80px;
-// `
-//
-// const SectionContent = styled.div`
-//   display: inline-block;
-//   font-family: 'Nunito', sans-serif;
-//   font-weight: 200;
-//   vertical-align: text-bottom;
-//   height: 80px;
-// `
+const ListingsHeader = styled.h6 `
+  font-family: 'Alegreya Sans SC', sans-serif;
+  margin-left: 17px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+`
 
 class ListingsPage extends Component {
   state = {
@@ -84,13 +83,16 @@ class ListingsPage extends Component {
     const renderListings = listings ? (
       listings.map((listing, index) => {
         return (
-          <div style={{ display: 'flex', margin: '10px 17px' }}>
-            <div style={{ height: '80px', marginLeft: 10}}>
-              <span>Price: {listing.price}  ID: {listing.id}</span>
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '30px', textAlign: 'left', fontWeight: 400, padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
+              <span>${listing.price}</span>
+              <span style={{float: 'right'}}>ID: #{listing.id}</span>
             </div>
-            <div style={{ height: '150px', marginLeft: 10}}>
-              <span>Sold by: {listing.seller_id}</span>
-              <button>Buy</button>
+            <div style={{ height: '50px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
+              <span style={{verticalAlign: 'bottom'}}>Sold by: {listing.seller_name}</span>
+              <Button variant="raised" href="#flat-buttons" color="secondary" className={classes.button} style={{ float: 'right'}}>
+                Buy
+              </Button>
             </div>
           </div>
         )
@@ -105,9 +107,9 @@ class ListingsPage extends Component {
 
     return (
       <ListingPageWrapper>
-        <img src={album.profile_img} style={{ width: '100%' }} alt="Album Name"/>
-        <h3>Album Name</h3>
-        <h6 style={{ textAlign: 'left', fontSize: '1.3em', fontWeight: 600 }}>All Listings</h6>
+        <img src={album.profile_img} style={{ width: '100%' }} alt={album.name_eng}/>
+        <AlbumHeading>Album Name: {album.name_eng}</AlbumHeading>
+        <ListingsHeader style={{ textAlign: 'left', fontSize: '1.3em', fontWeight: 600 }}>All Listings</ListingsHeader>
         <ListingSection>
           {renderListings}
         </ListingSection>

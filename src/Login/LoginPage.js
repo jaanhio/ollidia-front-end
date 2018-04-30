@@ -11,6 +11,7 @@ import axios from "axios";
 import { withRouter, Link } from "react-router-dom";
 import { withStyles } from 'material-ui/styles';
 import grey from 'material-ui/colors/grey';
+import { baseLink } from '../link';
 
 const styles = () => ({
   container: {
@@ -90,49 +91,7 @@ class LoginPage extends Component {
         loading: false
       });
     } else {
-      // axios
-      //   .post("http://e61054d0.ngrok.io/auth/sign_in", {
-      //     email: this.state.email,
-      //     password: this.state.password
-      //   })
-      //   .then(res => {
-      //     console.log(res.data);
-      //     if (res.data.token) {
-      //       // if authentication successful, set jwt and redirect to home page
-      //       localStorage.setItem("jwtToken", res.data.token);
-      //       localStorage.setItem("user", res.data.firstName);
-      //       // this.props.userHasAuthenticated(true);
-      //       // this.props.getUser(res.data.firstname);
-      //       this.props.history.push("/");
-      //     } else {
-      //       this.setState({
-      //         loading: false
-      //       });
-      //       if (res.data.error === "email") {
-      //         this.setState({ emailError: !this.state.emailError });
-      //       } else {
-      //         if (this.state.emailError) {
-      //           this.setState({ emailError: !this.state.emailError });
-      //         }
-      //         this.setState({ passwordError: !this.state.passwordError });
-      //       }
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //   });
-      // axios({
-      //   method: 'post',
-      //   url: 'http://e61054d0.ngrok.io/auth/sign_in',
-      //   headers: {
-      //     'access-token': {accessToken},
-      //     'client': {client},
-      //     'expiry': {expiry},
-      //     'token-type': {tokenType},
-      //     'uid': {uid}
-      //   }
-      // });
-      axios.post('https://ollida-api.herokuapp.com/auth/sign_in', {
+      axios.post(baseLink + '/auth/sign_in', {
         email: this.state.email,
         password: this.state.password
       })
@@ -146,7 +105,7 @@ class LoginPage extends Component {
             localStorage.setItem("uid", res.headers.uid);
             this.props.handleLogin();
             this.props.history.push("/login/success");
-            axios.get('https://ollida-api.herokuapp.com/api/v1/users/following').then(res => {
+            axios.get(baseLink +'/api/v1/users/following').then(res => {
               console.log(res.data);
               console.log('following');
               localStorage.setItem('userName', res.data.user_name);

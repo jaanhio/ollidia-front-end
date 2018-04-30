@@ -11,6 +11,7 @@ import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { withStyles } from 'material-ui/styles';
 import grey from 'material-ui/colors/grey';
+import { baseLink } from '../link';
 
 const styles = () => ({
   container: {
@@ -91,7 +92,7 @@ class RegistrationPage extends Component {
       });
     } else {
       axios
-        .post('https://ollida-api.herokuapp.com/auth', {
+        .post(baseLink + '/auth', {
           email: this.state.email,
           password: this.state.password
         })

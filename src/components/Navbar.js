@@ -14,6 +14,8 @@ import PersonIcon from 'material-ui-icons/Person';
 import BasketIcon from 'material-ui-icons/ShoppingBasket';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
+import { baseLink } from '../link';
 
 const NavBarWrapper = styled.nav`
   font-family: 'Alegreya Sans SC', sans-serif;
@@ -43,10 +45,20 @@ class NavBar extends Component {
 
   handleLogoutClick = () => {
     console.log('logging out');
-    localStorage.clear();
-    this.props.handleLogout();
-    this.handleMenuClose();
-    this.props.history.push('/logout/success');
+    axios({
+      method: 'delete',
+      url: baseLink + '/auth/sign_out',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'uid': localStorage.getItem('uid')
+      }
+    }).then(res => {
+      localStorage.clear();
+      this.props.handleLogout();
+      this.handleMenuClose();
+      this.props.history.push('/logout/success');
+    })
   };
 
   handleProfileClick = () => {

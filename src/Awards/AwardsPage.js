@@ -8,6 +8,7 @@ import { withStyles } from 'material-ui/styles';
 import grey from 'material-ui/colors/grey';
 import { Link } from 'react-router-dom';
 import { CircularProgress } from 'material-ui/Progress';
+import { baseLink } from '../link';
 
 const styles = () => ({
   container: {
@@ -78,7 +79,7 @@ class AwardsPage extends Component {
       fetchingData: true
     });
     const awardId = this.props.match.params.id;
-    axios.get(`https://ollida-api.herokuapp.com/api/v1/awards/${awardId}`)
+    axios.get(`${baseLink}/api/v1/awards/${awardId}`)
       .then(res => {
         const { data } = res;
         console.log(data);

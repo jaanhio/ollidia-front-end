@@ -13,6 +13,7 @@ import UnfollowIcon from 'material-ui-icons/Star';
 import IconButton from 'material-ui/IconButton';
 import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
+import { baseLink } from '../link';
 
 
 const ProfilePageWrapper = styled.main`
@@ -125,8 +126,8 @@ class ProfilePage extends Component {
 
   handleUnfollow = (award_id, nominee_id) => {
     axios
-      .post(`http://localhost:3001/api/v1/awards/${award_id}/nominees/${nominee_id}/track`, {
-          track_id: 1
+      .post(`${baseLink}/api/v1/awards/${award_id}/nominees/${nominee_id}/track`, {
+          track_id: '0'
         })
       .then(res => {
           this.handleClose();
@@ -140,7 +141,17 @@ class ProfilePage extends Component {
   };
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/v1/users/following').then(res => {
+    axios({
+      method: 'get',
+      url: baseLink + '/api/v1/users/following',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      }
+    }).then(res => {
       const { data } = res;
       this.setState({
         userName: data.user_name,

@@ -24,7 +24,7 @@ class SuccessPage extends Component {
     // redirect to home page after 5s
     setTimeout(() => {
       this.props.history.push('/');
-    }, 5000);
+    }, 1500);
   }
 
   componentWillUnmount() {
@@ -44,7 +44,6 @@ class SuccessPage extends Component {
         {type === 'register' && <h4>Thank you for signing up!</h4>}
         {type === 'login' && <h4>Successfully logged in!</h4>}
         {type === 'logout' && <h4>You have logged out.</h4>}
-        <h6>You will be redirected to the home page in {this.state.timer}s...</h6>
       </SuccessPageWrapper>
     );
   }

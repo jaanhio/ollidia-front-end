@@ -174,6 +174,9 @@ class NomineePage extends Component {
       console.log(followingArr);
       localStorage.setItem('followings', JSON.stringify(followingArr));
       // send request to update backend
+      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
+        track_id: '0'
+      });
       this.setState({
         followed: false,
         nomineeIndex: null
@@ -211,6 +214,9 @@ class NomineePage extends Component {
         return following === parseInt(this.props.match.params.id, 10)
       });
       // send request to backend to update
+      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
+        track_id: '1'
+      });
       this.setState({
         followed: true,
         nomineeIndex: nomineeIndex
@@ -219,7 +225,7 @@ class NomineePage extends Component {
   }
 
   render() {
-    const { nominee, fetchingData, followed } = this.state;
+    const { fetchingData, followed } = this.state;
     const color = followed ? 'yellow' : 'rgba(255,255,255,0.4)';
     return (
       <NomineePageWrapper>
@@ -235,7 +241,7 @@ class NomineePage extends Component {
             </div>
           ) : (
               <div>
-                <img src={this.state.artiste.profile_img} style={{ width: '100%' }} />
+                <img src={this.state.artiste.profile_img} style={{ width: '100%' }} alt={this.state.artiste.name_eng}/>
                 <NomineeDetails>
                   <RankDetails>
                     <h3 style={{ margin: 0, alignSelf: 'center' }}>Rank {this.state.ranking.ranking}</h3>
@@ -249,7 +255,7 @@ class NomineePage extends Component {
                 <BreakdownSection>
                   <TitleWrapper>Digital Sales</TitleWrapper>
                   <div>
-                    <img src={this.state.digitalSales.profile_img} style={{ width: '60%', objectFit: 'scale-down' }} />
+                    <img src={this.state.digitalSales.profile_img} style={{ width: '60%', objectFit: 'scale-down' }} alt='gaon-logo' />
                     <div style={{ width: '100%', display: 'flex', }}>
                       <div style={{ width: '50%' }}>
                         <Counts>{this.state.digitalSales.download_cnt}</Counts>
@@ -280,7 +286,7 @@ class NomineePage extends Component {
                   </AlbumSection>
                   <MCountSection>
                     <TitleWrapper>Votes</TitleWrapper>
-                    <img src={this.state.mcountVotes.profile_img} style={{ width: '80%', objectFit: 'scale-down' }} />
+                    <img src={this.state.mcountVotes.profile_img} style={{ width: '80%', objectFit: 'scale-down' }} alt='mcountdown-logo' />
                     <div>
                       <Counts>{this.state.mcountVotes.votes}</Counts>
                       <Units>Votes</Units>

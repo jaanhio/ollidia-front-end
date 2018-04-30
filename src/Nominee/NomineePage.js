@@ -174,6 +174,9 @@ class NomineePage extends Component {
       console.log(followingArr);
       localStorage.setItem('followings', JSON.stringify(followingArr));
       // send request to update backend
+      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
+        track_id: '0'
+      });
       this.setState({
         followed: false,
         nomineeIndex: null
@@ -211,6 +214,9 @@ class NomineePage extends Component {
         return following === parseInt(this.props.match.params.id, 10)
       });
       // send request to backend to update
+      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
+        track_id: '1'
+      });
       this.setState({
         followed: true,
         nomineeIndex: nomineeIndex

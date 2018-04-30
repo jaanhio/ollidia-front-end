@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { CircularProgress } from 'material-ui/Progress';
 import BuyMusicIcon from 'material-ui-icons/LibraryMusic';
+import IconButton from 'material-ui/IconButton';
+import StarIcon from 'material-ui-icons/Star';
 import YouTube from 'react-youtube';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 const NomineePageWrapper = styled.main`
   position: relative;
@@ -25,6 +27,7 @@ const RankDetails = styled.div`
   font-family: 'Alegreya Sans SC', sans-serif;
   font-size: 6vw;
   text-align: left;
+  display: flex;
 `;
 
 const TitleWrapper = styled.h4`
@@ -79,22 +82,38 @@ class NomineePage extends Component {
     youtubeViews: [],
     mcountVotes: [],
     album: [],
-    fetchingData: false
+    fetchingData: false,
+    followed: false,
+    nomineeIndex: null
   }
 
   componentDidMount() {
-    console.log(this.props.match.url);
+    console.log(`props.match.url:${this.props.match.url}`);
+    console.log(`props.match.params.id:${this.props.match.params.id}`);
+    console.log(`followings: ${this.props.userFollowings}`);
+    // scrolls to top of page
+    window.scrollTo(0, 0);
+
+    // handle loading of data
     this.setState({
       fetchingData: true
     });
+
+    // if user is logged in, checks if nominee has already been followed
+    if (localStorage.getItem('client')) {
+      console.log('checking if logged in');
+      this.checkFollowStatus();
+    }
+
+    // get required data for page
     const { url } = this.props.match;
-    // axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
     axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
+      // axios.get(`https://57ac8db5.ngrok.io/api/v1/${url}`)
       .then(res => {
         const { data } = res;
-        console.log(data);
-        console.log(data.nominee.breakdown.digital_sales.profile_img);
-        console.log('setting state');
+        // console.log(data);
+        // console.log(data.nominee.breakdown.digital_sales.profile_img);
+        // console.log('setting state');
         this.setState({
           digitalSales: data.nominee.breakdown.digital_sales,
           artiste: data.nominee.artiste,
@@ -107,11 +126,11 @@ class NomineePage extends Component {
           youtubeViews: data.nominee.breakdown.youtube_views,
           mcountVotes: data.nominee.breakdown.mcountdown_votes
         });
-        console.log('finished setState');
+        // console.log('finished setState');
       })
       .then(() => {
-        console.log('finished fetching');
-        console.log(Object.keys(this.state.digitalSales.digital_service_providers));
+        // console.log('finished fetching');
+        // console.log(Object.keys(this.state.digitalSales.digital_service_providers));
         this.setState({
           fetchingData: false
         });
@@ -120,8 +139,8 @@ class NomineePage extends Component {
         // responsive youtube iframe
         let youtubeFrame = document.getElementsByTagName('iframe')[0];
         if (youtubeFrame) {
-          console.log('iframe has mounted');
-          console.log(youtubeFrame);
+          // console.log('iframe has mounted');
+          // console.log(youtubeFrame);
           youtubeFrame.style.width = '100%';
           youtubeFrame.style.height = '35vh';
         }
@@ -131,15 +150,83 @@ class NomineePage extends Component {
       })
   }
 
-  render() {
-    const { nominee, fetchingData } = this.state;
-    console.log(this.state.digitalSales.digital_service_providers);
-    // const providersArray = Object.keys(this.state.digitalSales.digitalSales);
-    // console.log(providersArray);
-    // const renderDigitalServer = () => {
-    //   for ()
-    // }
+  checkFollowStatus = () => {
+    const followings = localStorage.getItem('followings') && JSON.parse(localStorage.getItem('followings'));
+    console.log(followings);
+    const nomineeIndex = followings.findIndex(following => {
+      return following === parseInt(this.props.match.params.id, 10)
+    });
+    console.log(nomineeIndex);
+    if (nomineeIndex > -1) {
+      this.setState({
+        followed: true,
+        nomineeIndex: nomineeIndex
+      })
+    }
+  }
 
+  followClick = () => {
+    // if already followed, clicking will unfollow and remove nominee from followings array in localStorage
+    if (this.state.followed) {
+      const followingArr = JSON.parse(localStorage.getItem('followings')).slice();
+      followingArr.splice(this.state.nomineeIndex, 1);
+      console.log('unfollowing');
+      console.log(followingArr);
+      localStorage.setItem('followings', JSON.stringify(followingArr));
+      // send request to update backend
+      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
+        track_id: '0'
+      });
+      this.setState({
+        followed: false,
+        nomineeIndex: null
+      });
+    }
+    // if not followed, clicking will follow and add nominee to following arrays in localStorage
+    else {
+      // check if 'followings' arrays exist
+      // if exist, make a copy of array, push new nominee id to array and replace existing array
+      if (localStorage.getItem('followings')) {
+        console.log('followings exist');
+        const updatedFollowing = JSON.parse(localStorage.getItem('followings'));
+
+        console.log(typeof updatedFollowing);
+        console.log(typeof updatedFollowing[0]);
+        console.log(typeof this.props.match.params.id);
+        console.log(this.props.match.params.id);
+        console.log(typeof parseInt(this.props.match.params.id, 10));
+        console.log(parseInt(this.props.match.params.id, 10));
+        console.log('updatedfollowing below');
+        updatedFollowing.push(parseInt(this.props.match.params.id, 10));
+        console.log(updatedFollowing);
+        localStorage.setItem('followings', JSON.stringify(updatedFollowing));
+      }
+      // else create new array, push new nominee id to array and setItem to localStorage
+      else {
+        console.log('no followings yet');
+        const updatedFollowing = [parseInt(this.props.match.params.id, 10)];
+        console.log(updatedFollowing);
+        debugger;
+        localStorage.setItem('followings', JSON.stringify(updatedFollowing));
+      }
+      const followings = localStorage.getItem('followings') && JSON.parse(localStorage.getItem('followings'));
+      const nomineeIndex = followings.findIndex(following => {
+        return following === parseInt(this.props.match.params.id, 10)
+      });
+      // send request to backend to update
+      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
+        track_id: '1'
+      });
+      this.setState({
+        followed: true,
+        nomineeIndex: nomineeIndex
+      });
+    }
+  }
+
+  render() {
+    const { nominee, fetchingData, followed } = this.state;
+    const color = followed ? 'yellow' : 'rgba(255,255,255,0.4)';
     return (
       <NomineePageWrapper>
         {
@@ -157,7 +244,8 @@ class NomineePage extends Component {
                 <img src={this.state.artiste.profile_img} style={{ width: '100%' }} />
                 <NomineeDetails>
                   <RankDetails>
-                    <h3 style={{ margin: 0 }}>Rank {this.state.ranking.ranking}</h3>
+                    <h3 style={{ margin: 0, alignSelf: 'center' }}>Rank {this.state.ranking.ranking}</h3>
+                    {this.props.isLoggedIn && <IconButton style={{ color: `${color}` }} onClick={this.followClick}><StarIcon /></IconButton>}
                   </RankDetails>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h5 style={{ fontWeight: 700, fontSize: '5vw', margin: 0 }}>{this.state.song.name_eng}</h5>
@@ -232,4 +320,4 @@ class NomineePage extends Component {
   }
 }
 
-export default NomineePage;
+export default withRouter(NomineePage);

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { albums, artistes, awards } from '../mockData';
+import { albums, artistes } from '../mockData';
 import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import { Link } from 'react-router-dom';
-import IconButton from 'material-ui/IconButton';
 import styled from 'styled-components';
-import axios from 'axios';
 
 const HomePageWrapper = styled.main`
   position: relative;
@@ -63,16 +61,16 @@ class HomePage extends Component {
 
     const renderArtistes = artistes.map((artiste, index) => {
       return (
-        <GridListTile key={artiste.img} style={{ margin: '0 2.5px' }}>
-          <img src={artiste.img} />
+        <GridListTile key={index} style={{ margin: '0 2.5px' }}>
+          <img src={artiste.img} alt={artiste.name} />
         </GridListTile>
       );
     });
 
     const renderAlbums = albums.map((album, index) => {
       return (
-        <GridListTile key={album.img} style={{ margin: '0 2.5px', width: '45%' }}>
-          <img src={album.img} />
+        <GridListTile key={index} style={{ margin: '0 2.5px', width: '45%' }}>
+          <img src={album.img} alt={album.name} />
         </GridListTile>
       );
     });
@@ -90,7 +88,7 @@ class HomePage extends Component {
                   return (
                     <GridListTile key={award.id} style={{ margin: '0 2.5px' }}>
                       <Link to={`/awards/${award.id}`}>
-                        <img src={award.profile_img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={award.name}/>
+                        <img src={award.profile_img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={award.name} />
                       </Link>
                       <GridListTileBar title={award.name} style={{ color: 'pink' }} />
                     </GridListTile>

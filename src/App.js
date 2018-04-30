@@ -7,6 +7,7 @@ import ListingsPage from './Listings/ListingsPage';
 import MyListingsPage from './Listings/MyListingsPage';
 import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
+import PageNotFound from './components/PageNotFound';
 import RegistrationPage from './Registration/RegistrationPage';
 import SuccessPage from './components/SuccessPage';
 import ProfilePage from './Profile/ProfilePage';
@@ -75,7 +76,7 @@ class App extends Component {
           <Route path="/users/profile" component={ProfilePage} />
           <Route path="/albums/:id/listings" exact component={ListingsPage} />
           <Route path="/mylistings" exact component={MyListingsPage} />
-
+          <Route component={PageNotFound} />
         </Switch>
         <Footer />
       </div>

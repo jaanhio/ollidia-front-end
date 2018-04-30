@@ -1,7 +1,7 @@
 language: node_js
+warnings_are_errors: false
 node_js:
   - "node"
-warnings_are_errors: false
 install:
   - yarn install --ignore-engines
 after_success:

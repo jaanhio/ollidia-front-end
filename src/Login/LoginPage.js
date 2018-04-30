@@ -105,7 +105,17 @@ class LoginPage extends Component {
             localStorage.setItem("uid", res.headers.uid);
             this.props.handleLogin();
             this.props.history.push("/login/success");
-            axios.get(baseLink +'/api/v1/users/following').then(res => {
+            axios({
+              method: 'get',
+              url: `${baseLink}/api/v1/users/following`,
+              headers: {
+                'access-token': localStorage.getItem('access-token'),
+                'client': localStorage.getItem('client'),
+                'expiry': localStorage.getItem('expiry'),
+                'token-type': localStorage.getItem('token-type'),
+                'uid': localStorage.getItem('uid')
+              }
+            }).then(res => {
               console.log(res.data);
               console.log('following');
               localStorage.setItem('userName', res.data.user_name);

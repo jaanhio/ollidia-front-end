@@ -22,7 +22,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "predeploy": "yarn run build",
+    "predeploy": "CI=false yarn run build",
     "deploy": "gh-pages -d build"
   },
   "homepage": "http://jaanhio.github.io/ollidia-front-end"

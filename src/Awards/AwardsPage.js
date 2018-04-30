@@ -179,7 +179,6 @@ class AwardsPage extends Component {
                         native
                         value={this.state.selectedCycle}
                         onChange={this.handleDateChange}
-                        defaultValue={"8"}
                         inputProps={{
                           id: 'result-date',
                         }}

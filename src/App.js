@@ -67,6 +67,7 @@ class App extends Component {
           <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominees/:id" component={NomineePage} />
           <Route path="/users/profile" component={ProfilePage} />
+          
           <Route path="/albums/:id/listings" exact component={ListingsPage} />
           <Route path="/mylistings" exact component={MyListingsPage} />
 

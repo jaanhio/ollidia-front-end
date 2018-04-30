@@ -51,6 +51,9 @@ const RegistrationFormWrapper = styled.form`
 
 class RegistrationPage extends Component {
   state = {
+    name:"",
+    nameError: false,
+    nameEmpty: false,
     email: "",
     emailError: false,
     emailEmpty: false,
@@ -77,9 +80,15 @@ class RegistrationPage extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.setState({ loading: true });
+    let nameInputLength = this.state.name.length;
     let emailInputLength = this.state.email.length;
     console.log(emailInputLength);
     let passwordInputLength = this.state.password.length;
+    if (nameInputLength === 0) {
+      this.setState({
+        nameEmpty: !this.state.nameEmpty
+      });
+    }
     if (emailInputLength === 0) {
       this.setState({
         emailEmpty: !this.state.emailEmpty
@@ -93,6 +102,7 @@ class RegistrationPage extends Component {
     } else {
       axios
         .post(baseLink + '/auth', {
+          name: this.state.name,
           email: this.state.email,
           password: this.state.password
         })
@@ -147,9 +157,37 @@ class RegistrationPage extends Component {
   };
 
   render() {
-    const { emailError, passwordError } = this.state;
+    const { nameError, emailError, passwordError } = this.state;
     const { classes } = this.props;
     // conditional rendering of email and password input field depending on status of input
+    const nameInputField = nameError ? (
+      <FormControl error>
+        <InputLabel htmlFor="name-input"
+          FormLabelClasses={{
+            root: classes.cssLabel,
+            focuses: classes.cssFocused
+          }}
+        >Name</InputLabel>
+        <Input
+          id="name-input"
+          value={this.state.name}
+          style={{ width: '75vw' }}
+          onChange={this.handleChange("name")}
+        />
+        <FormHelperText>name does not exist</FormHelperText>
+      </FormControl>
+    ) : (
+        <FormControl>
+          <InputLabel htmlFor="name-input">Name</InputLabel>
+          <Input
+            id="name-input"
+            value={this.state.name}
+            style={{ width: '75vw' }}
+            onChange={this.handleChange("name")}
+          />
+        </FormControl>
+      );
+
     const emailInputField = emailError ? (
       <FormControl error>
         <InputLabel htmlFor="email-input"
@@ -228,6 +266,7 @@ class RegistrationPage extends Component {
     return (
       <RegistrationPageWrapper>
         <RegistrationFormWrapper autoComplete="off" onSubmit={this.handleSubmit}>
+          {nameInputField}
           {emailInputField}
           {passwordInputField}
           <Button

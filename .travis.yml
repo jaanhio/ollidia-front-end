@@ -1,7 +1,8 @@
 language: node_js
 node_js:
   - "node"
-
+install:
+  - yarn install --ignore-engines
 after_success:
   - git config --global user.name "jaanhio"
   - git config --global user.email "jianhaot.89@gmail.com"

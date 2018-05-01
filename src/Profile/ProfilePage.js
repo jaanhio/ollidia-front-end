@@ -14,7 +14,7 @@ import IconButton from 'material-ui/IconButton';
 import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
 import { baseLink } from '../link';
-
+import Dropzone from 'react-dropzone';
 
 const ProfilePageWrapper = styled.main`
   position: relative;
@@ -135,6 +135,34 @@ class ProfilePage extends Component {
         })
   };
 
+  sendImageToController = (formPayLoad) => {
+
+    axios({
+      method: 'post',
+      url: baseLink + '/api/v1/users/avatar',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      },
+      body: formPayLoad
+    })
+    .then(imageFromController => {
+      this.setState({uploads: this.state.uploads.concat(imageFromController)})
+    })
+  };
+
+  readFile = async (files) => {
+    let formPayLoad = new FormData();
+    let appendFile = await formPayLoad.append('uploaded_image', files[0])
+    console.log('hi')
+    // this.sendImageToController(formPayLoad)
+  }
+
+
+
   // tab change
   handleChange = (event, value) => {
     this.setState({ value });
@@ -223,7 +251,22 @@ class ProfilePage extends Component {
 
     return (
       <ProfilePageWrapper>
-        <AccountCircle style={{ color: 'white', fontSize: '150px' }}/>
+        <div>
+          <Dropzone onDrop={this.readFile}>
+            <AccountCircle style={{ color: 'white', fontSize: '150px' }}/>
+             {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+            if (isDragActive) {
+              return "This file is authorized";
+            }
+            if (isDragReject) {
+              return "This file is not authorized";
+            }
+            return acceptedFiles.length || rejectedFiles.length
+              ? `Accepted ${acceptedFiles.length}, rejected ${rejectedFiles.length} files`
+              : "Try dropping some files.";
+          }}
+          </Dropzone>
+        </div>
         <NameWrapper>{this.state.userName}</NameWrapper>
           <div >
             <AppBar position="static" style={{textAlign: 'center'}}>

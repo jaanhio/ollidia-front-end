@@ -7,7 +7,6 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import Paper from 'material-ui/Paper';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
@@ -16,10 +15,10 @@ import UnfollowIcon from 'material-ui-icons/Star';
 
 import IconButton from 'material-ui/IconButton';
 import Modal from 'material-ui/Modal';
-import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import { baseLink } from '../link';
 
+import Dropzone from 'react-dropzone';
 import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import green from 'material-ui/colors/green';
 import yellow from 'material-ui/colors/yellow';
@@ -62,6 +61,10 @@ const FlexItem = styled.div`
   color: black;
 `
 
+const CardDetails = styled.p`
+  margin-top: 0;
+  font-family: 'Alegreya Sans SC', sans-serif;
+`
 // my listings
 const PageWrapper = styled.main`
   position: relative;
@@ -150,12 +153,13 @@ class ProfilePage extends Component {
     value: 'one',
     userName: null,
     followings: [],
+    activeModal: -1,
+    selectedFile: null,
     listings: [],
     approved_requests: [],
     unapproved_requests: [],
     paid_requests: [],
     history: [],
-    activeModal: -1
   };
 
   // unfollow confirmation
@@ -188,10 +192,54 @@ class ProfilePage extends Component {
       });
   };
 
+  sendImageToController = (formPayLoad) => {
+
+    axios({
+      method: 'post',
+      url: baseLink + '/api/v1/users/avatar',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      },
+      body: formPayLoad
+    })
+      .then(imageFromController => {
+        this.setState({ uploads: this.state.uploads.concat(imageFromController) })
+      })
+  };
+
+  readFile = async (files) => {
+    let formPayLoad = new FormData();
+    let appendFile = await formPayLoad.append('uploaded_image', files[0])
+    console.log('hi')
+    console.log(await appendFile);
+    console.log(formPayLoad);
+    // this.sendImageToController(formPayLoad)
+  }
+
+
+
   // tab change
   handleChange = (event, value) => {
     this.setState({ value });
   };
+
+  handleFileChange = (event) => {
+    const file = event.target.files[0];
+    this.setState({
+      selectedFile: file
+    });
+  }
+
+  handleFileUpload = () => {
+    console.log(this.state.selectedFile);
+    const formData = new FormData();
+    formData.append('my-file', this.state.selectedFile);
+    console.log(formData);
+  }
 
   getFollowers = () => {
     axios({
@@ -261,18 +309,20 @@ class ProfilePage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value, userName, followings, approved_requests, unapproved_requests, paid_requests, listings } = this.state;
+    const { value, followings, approved_requests, unapproved_requests, paid_requests, listings } = this.state;
 
-    const renderFollowings = followings.length != 0 ? (
+    const renderFollowings = followings.length !== 0 ? (
       followings.map((following, index) => {
         return (
           <FollowItem key={index}>
             <FlexItem>
-              <Avatar
-                alt={following.nominee_name}
-                src={following.nominee_profile_img}
-                className={classes.bigAvatar}
-              />
+              <Link to={`/awards/${following.award_id}/nominees/${following.nominee_id}`}>
+                <Avatar
+                  alt={following.nominee_name}
+                  src={following.nominee_profile_img}
+                  className={classes.bigAvatar}
+                />
+              </Link>
             </FlexItem>
             <FlexItem>
               <div>
@@ -298,15 +348,16 @@ class ProfilePage extends Component {
                   </Modal>
                 </span>
               </div>
-              <p style={{ margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+              {/*<p style={{ margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
                 {following.nomination_cycle}
-              </p>
-              <p style={{ marginBottom: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+        </p>*/}
+              <Link to={`/awards/${following.award_id}/nominees/${following.nominee_id}`} style={{ textDecoration: 'none', color: 'black', fontFamily: 'Alegreya Sans SC, sans-serif' }}>{following.nomination_cycle}</Link>
+              <CardDetails>
                 {following.nominee_name} - {following.song_name}
-              </p>
-              <p style={{ marginTop: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+              </CardDetails>
+              <CardDetails>
                 rank {following.ranking}
-              </p>
+              </CardDetails>
             </FlexItem>
           </FollowItem>
         )
@@ -340,11 +391,21 @@ class ProfilePage extends Component {
             <br></br>
             <span style={{marginLeft: 7}}>Price: ${listing.price}</span>
             </div>
-            <div style={{marginTop: 13, marginLeft: 7}}>
-            <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-              <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
-                Requests
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={listing.album_pic} /></div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: {listing.album_name_eng}</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: ${listing.price}</span>
+                </div>
+                <div style={{ marginTop: 13, marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
+                      Requests
               </Button></Link>
+
             </MuiThemeProvider></span>
             <span><IconButton style={{padding: 0, marginLeft: -8, marginRight: -8}} color="secondary" aria-label="edit" className={classes.button}>
               <EditIcon size="small" />
@@ -355,15 +416,15 @@ class ProfilePage extends Component {
             </div>
             </div>
 
+            </div>
           </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no listings</p>
         </div>
-      )
-    })
-  ) : (
-      <div>
-        <p>there are no listings</p>
-      </div>
-    );
+      );
 
   // const renderApprovedRequests
   const renderApprovedRequests = approved_requests ? (
@@ -403,15 +464,15 @@ class ProfilePage extends Component {
             </div>
             </div>
 
+            </div>
           </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no approved requests</p>
         </div>
-      )
-    })
-  ) : (
-      <div>
-        <p>there are no approved requests</p>
-      </div>
-    );
+      );
 
     // const renderUnApprovedRequests
     const renderUnApprovedRequests = unapproved_requests ? (
@@ -419,9 +480,9 @@ class ProfilePage extends Component {
         return (
 
           <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-              <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
-              <span style={{float: 'right'}}>ID: #{request.id}</span>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
               <br></br>
               <span style={{fontWeight: 400, paddingTop: 10}}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
             </div>
@@ -441,11 +502,11 @@ class ProfilePage extends Component {
                 <Button size="small" variant="raised" color="secondary" className={classes.margin}>
                   Edit
                 </Button>
-              </MuiThemeProvider></span>
-              <span><IconButton style={{padding: 0, marginLeft: -5, marginRight: -5}} aria-label="delete" className={classes.button}>
-                <DeleteIcon size="small" />
-              </IconButton></span>
-              </div>
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
               </div>
 
             </div>
@@ -481,87 +542,103 @@ class ProfilePage extends Component {
                 <br></br>
                 <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
                 </div>
-                <div style={{marginLeft: 7}}>
-                <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-                  <Button size="small" variant="raised" color="secondary" className={classes.margin}>
-                    Buy Again
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
+                      Buy Again
                   </Button>
-                </MuiThemeProvider></span>
+                  </MuiThemeProvider></span>
                 </div>
-                </div>
-
               </div>
+
             </div>
-          )
-        })
-      ) : (
-          <div>
-            <p>there are no unapproved requests</p>
           </div>
-        );
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no unapproved requests</p>
+        </div>
+      );
 
     return (
       <ProfilePageWrapper>
-        <AccountCircle style={{ color: 'white', fontSize: '150px' }} />
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Dropzone onDrop={this.readFile}>
+            <AccountCircle style={{ color: 'white', fontSize: '150px' }} />
+            {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+              if (isDragActive) {
+                return "This file is authorized";
+              }
+              if (isDragReject) {
+                return "This file is not authorized";
+              }
+              return acceptedFiles.length || rejectedFiles.length
+                ? `Accepted ${acceptedFiles.length}, rejected ${rejectedFiles.length} files`
+                : "Try dropping some files.";
+            }}
+          </Dropzone>
+        </div>
         <NameWrapper>{this.state.userName}</NameWrapper>
-          <div >
-            <AppBar position="static" style={{textAlign: 'center'}}>
-              <Tabs
-                value={value}
-                onChange={this.handleChange}
-                classes={{root: classes.tabsRoot, indicator: classes.tabsIndicator}}
-                centered
-              >
-                <Tab
-                  value="one"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="following"
-                />
-                <Tab
-                  value="two"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="listings"
-                />
-                <Tab
-                  value="three"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="orders"
-                />
-                <Tab
-                  value="four"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="history"
-                />
-              </Tabs>
-            </AppBar>
-            {value === 'one' && <TabContainer><FollowingWrapper>{renderFollowings}</FollowingWrapper></TabContainer>}
-            {value === 'two' && <TabContainer><PageWrapper>
-              <Header>Your Listings</Header>
-              <Section>
-                {renderMylistings}
-              </Section>
-            </PageWrapper></TabContainer>}
-            {value === 'three' && <TabContainer><PageWrapper>
-              <Header>Approved</Header>
-              <Section>
-                {renderApprovedRequests}
-              </Section>
-              <Header>Unapproved</Header>
-              <Section>
-                {renderUnApprovedRequests}
-              </Section>
-            </PageWrapper></TabContainer>}
-            {value === 'four' && <TabContainer><PageWrapper>
-              <Header>Your Payment History</Header>
-              <Section>
-                {renderPaidRequests}
-              </Section>
-            </PageWrapper></TabContainer>}
-          </div>
+        <div >
+          <AppBar position="static" style={{ textAlign: 'center', padding: '0 20px', backgroundColor: 'black' }}>
+            <Tabs
+              value={value}
+              onChange={this.handleChange}
+              classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+              scrollable
+              centered
+            >
+              <Tab
+                value="one"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="following"
+              />
+              <Tab
+                value="two"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="listings"
+              />
+              <Tab
+                value="three"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="orders"
+              />
+              <Tab
+                value="four"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="history"
+              />
+            </Tabs>
+          </AppBar>
+          {value === 'one' && <TabContainer><FollowingWrapper>{renderFollowings}</FollowingWrapper></TabContainer>}
+          {value === 'two' && <TabContainer><PageWrapper>
+            <Header>Your Listings</Header>
+            <Section>
+              {renderMylistings}
+            </Section>
+          </PageWrapper></TabContainer>}
+          {value === 'three' && <TabContainer><PageWrapper>
+            <Header>Approved</Header>
+            <Section>
+              {renderApprovedRequests}
+            </Section>
+            <Header>Unapproved</Header>
+            <Section>
+              {renderUnApprovedRequests}
+            </Section>
+          </PageWrapper></TabContainer>}
+          {value === 'four' && <TabContainer><PageWrapper>
+            <Header>Your Payment History</Header>
+            <Section>
+              {renderPaidRequests}
+            </Section>
+          </PageWrapper></TabContainer>}
+        </div>
       </ProfilePageWrapper>
     );
   }

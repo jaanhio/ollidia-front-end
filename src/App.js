@@ -5,6 +5,8 @@ import HomePage from './Home/HomePage';
 import AwardsPage from './Awards/AwardsPage';
 import ListingsPage from './Listings/ListingsPage';
 import MyListingsPage from './Listings/MyListingsPage';
+import MyRequestsPage from './Requests/MyRequestsPage';
+import ListingRequestsPage from './Requests/ListingRequestsPage';
 import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
 import PageNotFound from './components/PageNotFound';
@@ -40,7 +42,7 @@ class App extends Component {
     });
   }
 
-  
+
 
   componentDidMount() {
       axios({
@@ -86,8 +88,13 @@ class App extends Component {
           <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominees/:id" exact render={() => <NomineePage isLoggedIn={isLoggedIn} userFollowings={userFollowings} />} />
           <Route path="/users/profile" component={ProfilePage} />
+
           <Route path="/albums/:id/listings" exact component={ListingsPage} />
           <Route path="/mylistings" exact component={MyListingsPage} />
+
+          <Route path="/myrequests" exact component={MyRequestsPage} />
+          <Route path="/listings/:id/requests" exact component={ListingRequestsPage} />
+
           <Route component={PageNotFound} />
         </Switch>
         <Footer />

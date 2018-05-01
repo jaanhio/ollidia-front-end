@@ -15,6 +15,7 @@ import Modal from 'material-ui/Modal';
 import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import { baseLink } from '../link';
+import { Link } from 'react-router-dom';
 
 
 const ProfilePageWrapper = styled.main`
@@ -50,6 +51,11 @@ const FlexItem = styled.div`
   text-align: left;
   margin-right: 20px;
   color: black;
+`
+
+const CardDetails = styled.p`
+  margin-top: 0;
+  font-family: 'Alegreya Sans SC', sans-serif;
 `
 // tabs
 function TabContainer(props) {
@@ -183,11 +189,13 @@ class ProfilePage extends Component {
         return (
           <FollowItem key={index}>
             <FlexItem>
-              <Avatar
-                alt={following.nominee_name}
-                src={following.nominee_profile_img}
-                className={classes.bigAvatar}
-              />
+              <Link to={`/awards/${following.award_id}/nominees/${following.nominee_id}`}>
+                <Avatar
+                  alt={following.nominee_name}
+                  src={following.nominee_profile_img}
+                  className={classes.bigAvatar}
+                />
+              </Link>
             </FlexItem>
             <FlexItem>
               <div>
@@ -213,15 +221,16 @@ class ProfilePage extends Component {
                   </Modal>
                 </span>
               </div>
-              <p style={{ margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+              {/*<p style={{ margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
                 {following.nomination_cycle}
-              </p>
-              <p style={{ marginBottom: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+        </p>*/}
+              <Link to={`/awards/${following.award_id}/nominees/${following.nominee_id}`} style={{ textDecoration: 'none', color: 'black', fontFamily: 'Alegreya Sans SC, sans-serif' }}>{following.nomination_cycle}</Link>
+              <CardDetails>
                 {following.nominee_name} - {following.song_name}
-              </p>
-              <p style={{ marginTop: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+              </CardDetails>
+              <CardDetails>
                 rank {following.ranking}
-              </p>
+              </CardDetails>
             </FlexItem>
           </FollowItem>
         )

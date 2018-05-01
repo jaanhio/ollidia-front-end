@@ -111,6 +111,7 @@ class ProfilePage extends Component {
   state = {
     value: 'one',
     userName: null,
+    userAvatar: null,
     followings: [],
     activeModal: -1
   };
@@ -145,8 +146,9 @@ class ProfilePage extends Component {
       });
   };
 
-  sendImageToController = (formPayLoad) => {
-
+  uploadAvatar = (files) => {
+    let formPayLoad = new FormData();
+    formPayLoad.append('uploaded_avatar', files[0])
     axios({
       method: 'post',
       url: baseLink + '/api/v1/users/avatar',
@@ -157,18 +159,11 @@ class ProfilePage extends Component {
         'token-type': localStorage.getItem('token-type'),
         'uid': localStorage.getItem('uid')
       },
-      body: formPayLoad
+      data: formPayLoad
     })
-    .then(imageFromController => {
-      this.setState({uploads: this.state.uploads.concat(imageFromController)})
+    .then(response => {
+      this.setState({ userAvatar: response.data})
     })
-  };
-
-  readFile = async (files) => {
-    let formPayLoad = new FormData();
-    let appendFile = await formPayLoad.append('uploaded_image', files[0])
-    console.log('hi')
-    // this.sendImageToController(formPayLoad)
   }
 
 
@@ -193,6 +188,7 @@ class ProfilePage extends Component {
       const { data } = res;
       this.setState({
         userName: data.user_name,
+        userAvatar: data.user_avatar,
         followings: data.followings
       });
     });
@@ -205,7 +201,7 @@ class ProfilePage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value, userName, followings } = this.state;
+    const { value, userName, userAvatar, followings } = this.state;
     const renderFollowings = followings.length != 0 ? (
       followings.map((following, index) => {
         return (
@@ -267,19 +263,12 @@ class ProfilePage extends Component {
     return (
       <ProfilePageWrapper>
         <div>
-          <Dropzone onDrop={this.readFile}>
-            <AccountCircle style={{ color: 'white', fontSize: '150px' }}/>
-             {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
-            if (isDragActive) {
-              return "This file is authorized";
-            }
-            if (isDragReject) {
-              return "This file is not authorized";
-            }
-            return acceptedFiles.length || rejectedFiles.length
-              ? `Accepted ${acceptedFiles.length}, rejected ${rejectedFiles.length} files`
-              : "Try dropping some files.";
-          }}
+          <Dropzone onDrop={this.uploadAvatar}>
+            <Avatar
+                alt={this.state.userName}
+                src={this.state.userAvatar}
+                className={classes.bigAvatar}
+              />
           </Dropzone>
         </div>
         <NameWrapper>{this.state.userName}</NameWrapper>

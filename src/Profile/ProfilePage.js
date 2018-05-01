@@ -2,20 +2,27 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import AccountCircle from 'material-ui-icons/AccountCircle';
+import EditIcon from 'material-ui-icons/ModeEdit';
+import DeleteIcon from 'material-ui-icons/Delete';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Paper from 'material-ui/Paper';
+import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import Typography from 'material-ui/Typography';
 import UnfollowIcon from 'material-ui-icons/Star';
+
 import IconButton from 'material-ui/IconButton';
 import Modal from 'material-ui/Modal';
-import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import { baseLink } from '../link';
+
 import Dropzone from 'react-dropzone';
+import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import green from 'material-ui/colors/green';
+import yellow from 'material-ui/colors/yellow';
+import purple from 'material-ui/colors/purple';
 
 const ProfilePageWrapper = styled.main`
   position: relative;
@@ -51,6 +58,30 @@ const FlexItem = styled.div`
   margin-right: 20px;
   color: black;
 `
+
+const CardDetails = styled.p`
+  margin-top: 0;
+  font-family: 'Alegreya Sans SC', sans-serif;
+`
+// my listings
+const PageWrapper = styled.main`
+  position: relative;
+  color: white;
+  margin-bottom: 15vh;
+`
+const Section = styled.div`
+  font-family: 'Alegreya Sans SC', sans-serif;
+  font-weight: 200;
+  color: black;
+`
+const Header = styled.h3`
+  font-family: 'Alegreya Sans SC', sans-serif;
+  text-align: left;
+  font-size: 1.6em;
+  font-weight: 300;
+  margin-left: 17px;
+`
+
 // tabs
 function TabContainer(props) {
   return (
@@ -86,9 +117,13 @@ const styles = theme => ({
     },
   },
   tabSelected: {},
-  bigAvatar: {
+  nomineeAvatar: {
     width: 80,
     height: 80,
+  },
+  userAvatar: {
+    width: 120,
+    height: 120,
   },
   paper: {
     position: 'absolute',
@@ -106,6 +141,14 @@ const styles = theme => ({
   }
 });
 
+const theme = createMuiTheme({
+  palette: {
+    primary: green,
+    secondary: yellow,
+    tertiary: purple
+  },
+});
+
 class ProfilePage extends Component {
 
   state = {
@@ -113,7 +156,13 @@ class ProfilePage extends Component {
     userName: null,
     userAvatar: null,
     followings: [],
-    activeModal: -1
+    activeModal: -1,
+    selectedFile: null,
+    listings: [],
+    approved_requests: [],
+    unapproved_requests: [],
+    paid_requests: [],
+    history: [],
   };
 
   // unfollow confirmation
@@ -173,6 +222,20 @@ class ProfilePage extends Component {
     this.setState({ value });
   };
 
+  handleFileChange = (event) => {
+    const file = event.target.files[0];
+    this.setState({
+      selectedFile: file
+    });
+  }
+
+  handleFileUpload = () => {
+    console.log(this.state.selectedFile);
+    const formData = new FormData();
+    formData.append('my-file', this.state.selectedFile);
+    console.log(formData);
+  }
+
   getFollowers = () => {
     axios({
       method: 'get',
@@ -185,11 +248,28 @@ class ProfilePage extends Component {
         'uid': localStorage.getItem('uid')
       }
     }).then(res => {
+
       const { data } = res;
       this.setState({
         userName: data.user_name,
         userAvatar: data.user_avatar,
         followings: data.followings
+      });
+    });
+
+    axios.get('http://localhost:3000/api/v1/myrequests').then(res => {
+      const { data } = res;
+
+      this.setState({
+        approved_requests: data.requests.filter(req => req['paid'] === false && req['approved'] === true),
+        unapproved_requests: data.requests.filter(req => req['paid'] === false && req['approved'] === false),
+        paid_requests: data.requests.filter(req => req['paid'] === true && req['approved'] === true)
+      });
+    });
+    axios.get('http://localhost:3000/api/v1/mylistings').then(res => {
+      const { data } = res;
+      this.setState({
+        listings: data.listings
       });
     });
   }
@@ -201,17 +281,20 @@ class ProfilePage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value, userName, userAvatar, followings } = this.state;
-    const renderFollowings = followings.length != 0 ? (
+    const { value, userName, userAvatar, followings, approved_requests, unapproved_requests, paid_requests, listings } = this.state;
+
+    const renderFollowings = followings.length !== 0 ? (
       followings.map((following, index) => {
         return (
           <FollowItem key={index}>
             <FlexItem>
-              <Avatar
-                alt={following.nominee_name}
-                src={following.nominee_profile_img}
-                className={classes.bigAvatar}
-              />
+              <Link to={`/awards/${following.award_id}/nominees/${following.nominee_id}`}>
+                <Avatar
+                  alt={following.nominee_name}
+                  src={following.nominee_profile_img}
+                  className={classes.nomineeAvatar}
+                />
+              </Link>
             </FlexItem>
             <FlexItem>
               <div>
@@ -237,15 +320,16 @@ class ProfilePage extends Component {
                   </Modal>
                 </span>
               </div>
-              <p style={{ margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+              {/*<p style={{ margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
                 {following.nomination_cycle}
-              </p>
-              <p style={{ marginBottom: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+        </p>*/}
+              <Link to={`/awards/${following.award_id}/nominees/${following.nominee_id}`} style={{ textDecoration: 'none', color: 'black', fontFamily: 'Alegreya Sans SC, sans-serif' }}>{following.nomination_cycle}</Link>
+              <CardDetails>
                 {following.nominee_name} - {following.song_name}
-              </p>
-              <p style={{ marginTop: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+              </CardDetails>
+              <CardDetails>
                 rank {following.ranking}
-              </p>
+              </CardDetails>
             </FlexItem>
           </FollowItem>
         )
@@ -259,25 +343,208 @@ class ProfilePage extends Component {
         </FollowItem>
       );
 
+    // const renderMylistings
+    const renderMylistings = listings ? (
+
+      listings.map((listing, index) => {
+        return (
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Listing Posted: {listing.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{listing.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
+            </div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={listing.album_pic} /></div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: {listing.album_name_eng}</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: ${listing.price}</span>
+                </div>
+                <div style={{ marginTop: 13, marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
+                      Requests
+              </Button></Link>
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} color="secondary" aria-label="edit" className={classes.button}>
+                    <EditIcon size="small" />
+                  </IconButton></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no listings</p>
+        </div>
+      );
+
+    // const renderApprovedRequests
+    const renderApprovedRequests = approved_requests ? (
+      approved_requests.map((request, index) => {
+        return (
+
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
+            </div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}>Image here</div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="primary" className={classes.margin}>
+                      Pay Now
+              </Button>
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no approved requests</p>
+        </div>
+      );
+
+    // const renderUnApprovedRequests
+    const renderUnApprovedRequests = unapproved_requests ? (
+      unapproved_requests.map((request, index) => {
+        return (
+
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
+            </div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}>Image here</div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
+                      Edit
+                </Button>
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no unapproved requests</p>
+        </div>
+      );
+
+    // const renderPaidRequests
+    const renderPaidRequests = paid_requests ? (
+      paid_requests.map((request, index) => {
+        return (
+
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
+            </div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}>Image here</div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
+                      Buy Again
+                  </Button>
+                  </MuiThemeProvider></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no unapproved requests</p>
+        </div>
+      );
 
     return (
       <ProfilePageWrapper>
-        <div>
-          <Dropzone onDrop={this.uploadAvatar}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Dropzone
+            accept="image/jpeg, image/png"
+            multiple={false}
+            onDrop={this.uploadAvatar}
+            style={{border: 'none'}}
+          >
             <Avatar
                 alt={this.state.userName}
                 src={this.state.userAvatar}
-                className={classes.bigAvatar}
+                className={classes.userAvatar}
               />
           </Dropzone>
         </div>
         <NameWrapper>{this.state.userName}</NameWrapper>
         <div >
-          <AppBar position="static" style={{ textAlign: 'center' }}>
+          <AppBar position="static" style={{ textAlign: 'center', padding: '0 20px', backgroundColor: 'black' }}>
             <Tabs
               value={value}
               onChange={this.handleChange}
               classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+              scrollable
               centered
             >
               <Tab
@@ -290,10 +557,16 @@ class ProfilePage extends Component {
                 value="two"
                 disableRipple
                 classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                label="orders"
+                label="listings"
               />
               <Tab
                 value="three"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="orders"
+              />
+              <Tab
+                value="four"
                 disableRipple
                 classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
                 label="history"
@@ -301,8 +574,28 @@ class ProfilePage extends Component {
             </Tabs>
           </AppBar>
           {value === 'one' && <TabContainer><FollowingWrapper>{renderFollowings}</FollowingWrapper></TabContainer>}
-          {value === 'two' && <TabContainer>Item Two</TabContainer>}
-          {value === 'three' && <TabContainer>Item Three</TabContainer>}
+          {value === 'two' && <TabContainer><PageWrapper>
+            <Header>Your Listings</Header>
+            <Section>
+              {renderMylistings}
+            </Section>
+          </PageWrapper></TabContainer>}
+          {value === 'three' && <TabContainer><PageWrapper>
+            <Header>Approved</Header>
+            <Section>
+              {renderApprovedRequests}
+            </Section>
+            <Header>Unapproved</Header>
+            <Section>
+              {renderUnApprovedRequests}
+            </Section>
+          </PageWrapper></TabContainer>}
+          {value === 'four' && <TabContainer><PageWrapper>
+            <Header>Your Payment History</Header>
+            <Section>
+              {renderPaidRequests}
+            </Section>
+          </PageWrapper></TabContainer>}
         </div>
       </ProfilePageWrapper>
     );

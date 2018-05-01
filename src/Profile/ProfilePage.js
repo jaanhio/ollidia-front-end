@@ -414,11 +414,14 @@ class ProfilePage extends Component {
             onDrop={this.uploadAvatar}
             style={{border: 'none'}}
           >
-            <Avatar
-                alt={this.state.userName}
-                src={this.state.userAvatar}
-                className={classes.userAvatar}
-              />
+            {this.state.userAvatar == 'n/a'
+              ? <AccountCircle style={{ color: 'white', fontSize: '120px' }} />
+              : <Avatar
+                  alt={this.state.userName}
+                  src={this.state.userAvatar}
+                  className={classes.userAvatar}
+                />
+            }
           </Dropzone>
         </div>
         <NameWrapper>{this.state.userName}</NameWrapper>

@@ -77,6 +77,30 @@ class ListingRequestsPage extends Component {
     unpaid_requests: []
   }
 
+  handleRequest = (request_id, customer_id, listing_id, quantity) => {
+    axios({
+      method: 'patch',
+      url: 'http://localhost:3000/api/v1/myrequests',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      },
+      data: {
+        id: request_id,
+        customer_id: customer_id,
+        listing_id: listing_id,
+        quantity: quantity,
+        approved: true,
+        paid: false
+      }
+    }).then(res => {
+      this.props.history.push('/')
+    });
+  };
+
   componentDidMount() {
     const listingId = this.props.match.params.id;
     axios.get(`http://localhost:3000/api/v1/listings/${listingId}/requests`)
@@ -98,34 +122,34 @@ class ListingRequestsPage extends Component {
       unapproved_requests.map((request, index) => {
         return (
 
-          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+          <div style={{ margin: '5px 5px', backgroundColor: 'white' }}>
             <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
               <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
               <span style={{float: 'right'}}>ID: #{request.id}</span>
               <br></br>
-              <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
+              <span style={{fontWeight: 400, paddingTop: 10}}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
             </div>
             <div style={{ height: '120px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-              <div style={{height: '100px', display: 'inline-block'}}>Image here</div>
+              <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} alt="album image" src={request.album_pic}/></div>
 
               <div style={{verticalAlign: 'top', display: 'inline-block'}}>
               <div style={{verticalAlign: 'top'}}>
-              <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
+              <span style={{marginLeft: 7, fontWeight: 400}}>Album: {request.album_name}</span>
               <br></br>
               <span style={{marginLeft: 7}}>Customer Information:</span>
               <br></br>
-              <span style={{marginLeft: 7}}>Name: Customer Name</span>
+              <span style={{marginLeft: 7}}>Name: {request.customer_name}</span>
               <br></br>
-              <span style={{marginLeft: 7}}>Email: Customer Email</span>
+              <span style={{marginLeft: 7}}>Email: {request.customer_email}</span>
               </div>
               <div style={{marginTop: 15, marginLeft: 7}}>
               <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-                <Button size="small" variant="raised" color="primary" className={classes.margin}>
+                <Button onClick={ () => this.handleRequest(request.id, request.customer_id, request.listing_id, request.quantity)} size="small" variant="raised" color="primary" className={classes.margin}>
                   Approve
                 </Button>
               </MuiThemeProvider></span>
-              <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-                <Button size="small" variant="raised" color="primary" className={classes.margin}>
+              <span style={{marginRight: 0}}><MuiThemeProvider theme={theme}>
+                <Button size="small" variant="raised" color="tertiary" className={classes.margin}>
                   Deny
                 </Button>
               </MuiThemeProvider></span>
@@ -151,14 +175,14 @@ class ListingRequestsPage extends Component {
                 <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
                 <span style={{float: 'right'}}>ID: #{request.id}</span>
                 <br></br>
-                <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
+                <span style={{fontWeight: 400, paddingTop: 10}}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
               </div>
               <div style={{ height: '120px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-                <div style={{height: '100px', display: 'inline-block'}}>Image here</div>
+                <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} alt="album image" src={request.album_pic}/></div>
 
                 <div style={{verticalAlign: 'top', display: 'inline-block'}}>
                 <div style={{verticalAlign: 'top'}}>
-                <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
+                <span style={{marginLeft: 7, fontWeight: 400}}>Album: {request.album_name}</span>
                 <br></br>
                 <span style={{marginLeft: 7}}>Customer Information:</span>
                 <br></br>

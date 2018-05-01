@@ -35,6 +35,10 @@ class HomePage extends Component {
     albumsList: []
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.awardsList !== prevState.awardsList) {
@@ -80,7 +84,7 @@ class HomePage extends Component {
     return (
       <HomePageWrapper>
         <div>
-          <TitleWrapper>Awardsss</TitleWrapper>
+          <TitleWrapper>Awards</TitleWrapper>
           {awardsList ? (
             <GridWrapper>
               <GridList style={{ flexWrap: 'nowrap', transform: 'translateZ(0)', marginLeft: 4 }} cols={2.5}>

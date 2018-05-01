@@ -68,7 +68,7 @@ class AwardsPage extends Component {
     nominationCycles: [],
     maxCycleID: null,
     awardNominees: [],
-    selectedCycle: 2,
+    selectedCycle: '8',
     selectedResults: null,
     fetchingData: false
   }
@@ -91,8 +91,14 @@ class AwardsPage extends Component {
         });
       })
       .then(() => {
+        const initialResults = this.state.awardNominees.filter(nominee => {
+          return nominee.cycle_id === parseInt('8', 10);
+        }).sort((a, b) => {
+          return a.ranking.ranking - b.ranking.ranking;
+        });
         this.setState({
-          fetchingData: false
+          fetchingData: false,
+          selectedResults: initialResults
         });
       });
   }
@@ -181,7 +187,7 @@ class AwardsPage extends Component {
                           borderBottom: '1px solid white'
                         }}
                       >
-                        <option value="" />
+                        <option value=''>Select Date</option>
                         {renderAvailableDates}
                       </Select>
                     </FormControl>

@@ -16,7 +16,9 @@ import UnfollowIcon from 'material-ui-icons/Star';
 
 import IconButton from 'material-ui/IconButton';
 import Modal from 'material-ui/Modal';
+import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
+import { baseLink } from '../link';
 
 import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import green from 'material-ui/colors/green';
@@ -26,7 +28,6 @@ import purple from 'material-ui/colors/purple';
 const ProfilePageWrapper = styled.main`
   position: relative;
   top: 50px;
-  height: 100vh;
   background-color: black;
   font-family: 'Alegreya Sans SC', sans-serif;
   margin-bottom: 15vh;
@@ -42,7 +43,7 @@ const NameWrapper = styled.h4`
 
 const FollowingWrapper = styled.div`
   width: 90%;
-  margin: 50px auto;
+  margin: 30px auto;
 `
 
 const FollowItem = styled.div`
@@ -50,7 +51,6 @@ const FollowItem = styled.div`
   margin-bottom: 20px;
   background-color: white;
   padding: 0 10px;
-  border-radius: 10px;
   justify-content: flex-start;
   align-items: center;
 `
@@ -82,7 +82,7 @@ const Header = styled.h3`
 // tabs
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 , color: 'white'}}>
+    <Typography component="div" style={{ padding: '0 24px', color: 'white' }}>
       {props.children}
     </Typography>
   );
@@ -118,12 +118,13 @@ const styles = theme => ({
     width: 80,
     height: 80,
   },
-   paper: {
+  paper: {
     position: 'absolute',
-    width: theme.spacing.unit * 50,
+    width: '70vw',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing.unit * 4,
+    // padding: '0 24px',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -165,14 +166,24 @@ class ProfilePage extends Component {
   };
 
   handleUnfollow = (award_id, nominee_id) => {
-    axios
-      .post(`http://localhost:3001/api/v1/awards/${award_id}/nominees/${nominee_id}/track`, {
-          track_id: 1
-        })
+    axios({
+      method: 'post',
+      url: `${baseLink}/api/v1/awards/${award_id}/nominees/${nominee_id}/track`,
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      },
+      data: {
+        track_id: '0',
+      }
+    })
       .then(res => {
-          this.handleClose();
-          window.location.reload();
-        })
+        this.handleClose();
+        this.getFollowers();
+      });
   };
 
   // tab change
@@ -180,14 +191,26 @@ class ProfilePage extends Component {
     this.setState({ value });
   };
 
-  componentDidMount() {
-    axios.get('http://localhost:3000/api/v1/users/following').then(res => {
+  getFollowers = () => {
+    axios({
+      method: 'get',
+      url: baseLink + '/api/v1/users/following',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      }
+    }).then(res => {
+
       const { data } = res;
       this.setState({
         userName: data.user_name,
         followings: data.followings
       });
     });
+
     axios.get('http://localhost:3000/api/v1/myrequests').then(res => {
       const { data } = res;
 
@@ -203,6 +226,11 @@ class ProfilePage extends Component {
         listings: data.listings
       });
     });
+  }
+
+  componentDidMount() {
+    window.scrollTo(0, 0);
+    this.getFollowers();
   };
 
   render() {
@@ -221,14 +249,14 @@ class ProfilePage extends Component {
               />
             </FlexItem>
             <FlexItem>
-                <div>
-                <h3 style={{display: 'inline-block', marginBottom: '0', fontFamily: 'Alegreya Sans SC, sans-serif'}}>{following.award_name}</h3>
+              <div>
+                <h3 style={{ display: 'inline-block', marginBottom: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>{following.award_name}</h3>
                 <span >
-                  <UnfollowIcon style={{ position: 'relative', top: '5px', marginLeft: '3px', color: '#ffe66b', cursor: 'pointer'}} onClick={ () => this.handleOpen(index) } />
+                  <UnfollowIcon style={{ position: 'relative', top: '5px', marginLeft: '3px', color: '#ffe66b', cursor: 'pointer' }} onClick={() => this.handleOpen(index)} />
                   <Modal
                     aria-labelledby="simple-modal-title"
                     aria-describedby="simple-modal-description"
-                    open={ index === this.state.activeModal}
+                    open={index === this.state.activeModal}
                     onClose={this.handleClose}
                   >
                     <div className={classes.paper}>
@@ -238,21 +266,21 @@ class ProfilePage extends Component {
                       <Typography variant="subheading" id="simple-modal-description">
                         You will stop receiving notifications for this award nominee.
                       </Typography>
-                      <Button variant="raised" color="secondary" className={classes.button} onClick={ () => this.handleUnfollow(following.award_id, following.nominee_id) }>Unfollow</Button>
+                      <Button variant="raised" color="secondary" className={classes.button} onClick={() => this.handleUnfollow(following.award_id, following.nominee_id)}>Unfollow</Button>
                       <Button variant="raised" color="primary" className={classes.button} onClick={this.handleClose}>Cancel</Button>
                     </div>
                   </Modal>
                 </span>
-                </div>
-                <p style={{margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif'}}>
-                  {following.nomination_cycle}
-                </p>
-                <p style={{marginBottom: '0', fontFamily: 'Alegreya Sans SC, sans-serif'}}>
-                  {following.nominee_name} - {following.song_name}
-                </p>
-                <p style={{marginTop: '0', fontFamily: 'Alegreya Sans SC, sans-serif'}}>
-                  rank {following.ranking}
-                </p>
+              </div>
+              <p style={{ margin: '0', fontSize: '0.8rem', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+                {following.nomination_cycle}
+              </p>
+              <p style={{ marginBottom: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+                {following.nominee_name} - {following.song_name}
+              </p>
+              <p style={{ marginTop: '0', fontFamily: 'Alegreya Sans SC, sans-serif' }}>
+                rank {following.ranking}
+              </p>
             </FlexItem>
           </FollowItem>
         )
@@ -260,7 +288,7 @@ class ProfilePage extends Component {
     ) : (
         <FollowItem>
           <FlexItem>
-            <p style={{fontFamily: 'Alegreya Sans SC, sans-serif'}}>Follow award nominees to get notifications about their current ranking!
+            <p style={{ fontFamily: 'Alegreya Sans SC, sans-serif' }}>Follow award nominees to get notifications about their current ranking!
             </p>
           </FlexItem>
         </FollowItem>
@@ -446,7 +474,7 @@ class ProfilePage extends Component {
 
     return (
       <ProfilePageWrapper>
-        <AccountCircle style={{ color: 'white', fontSize: '150px' }}/>
+        <AccountCircle style={{ color: 'white', fontSize: '150px' }} />
         <NameWrapper>{this.state.userName}</NameWrapper>
           <div >
             <AppBar position="static" style={{textAlign: 'center'}}>

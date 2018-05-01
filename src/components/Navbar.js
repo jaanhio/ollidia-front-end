@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import logo from '../assets/ollida_logo.jpg';
-import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Grid from 'material-ui/Grid';
-import Toolbar from 'material-ui/Toolbar';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import Fade from 'material-ui/transitions/Fade';
 import MenuIcon from 'material-ui-icons/Menu';
 import PersonIcon from 'material-ui-icons/Person';
-import BasketIcon from 'material-ui-icons/ShoppingBasket';
 import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
+import { baseLink } from '../link';
 
 const NavBarWrapper = styled.nav`
   font-family: 'Alegreya Sans SC', sans-serif;
@@ -43,10 +41,20 @@ class NavBar extends Component {
 
   handleLogoutClick = () => {
     console.log('logging out');
-    localStorage.clear();
-    this.props.handleLogout();
-    this.handleMenuClose();
-    this.props.history.push('/logout/success');
+    axios({
+      method: 'delete',
+      url: baseLink + '/auth/sign_out',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'uid': localStorage.getItem('uid')
+      }
+    }).then(res => {
+      localStorage.clear();
+      this.props.handleLogout();
+      this.handleMenuClose();
+      this.props.history.push('/logout/success');
+    })
   };
 
   handleProfileClick = () => {
@@ -78,9 +86,6 @@ class NavBar extends Component {
             <MenuItem onClick={this.handleProfileClick}>Profile</MenuItem>
             <MenuItem onClick={this.handleLogoutClick}>Log Out</MenuItem>
           </Menu>
-          {/*<IconButton style={{ color: 'white', position: 'relative', left: '-22px' }}>
-            <BasketIcon />
-    </IconButton>*/}
         </div>
       </Grid>
     ) : (
@@ -101,7 +106,7 @@ class NavBar extends Component {
                 </IconButton>
               </Grid>
               <Grid item xs={8} sm={6} lg={6}>
-                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} alt='ollida-logo'/>
               </Grid>
             </Grid>
           </AppBar>
@@ -119,7 +124,7 @@ class NavBar extends Component {
                 </IconButton>
               </Grid>
               <Grid item xs={8} sm={6} lg={6}>
-                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} />
+                <img src={logo} style={{ width: 158, height: 'auto' }} onClick={this.handleImgClick} alt='ollida-logo'/>
               </Grid>
               {renderLoggedInFeatures}
             </Grid>

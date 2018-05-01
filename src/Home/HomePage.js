@@ -35,6 +35,10 @@ class HomePage extends Component {
     albumsList: []
   }
 
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.awardsList !== prevState.awardsList) {

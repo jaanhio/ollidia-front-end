@@ -11,6 +11,7 @@ import axios from "axios";
 import { withRouter, Link } from "react-router-dom";
 import { withStyles } from 'material-ui/styles';
 import grey from 'material-ui/colors/grey';
+import { baseLink } from '../link';
 
 const styles = () => ({
   container: {
@@ -90,7 +91,7 @@ class LoginPage extends Component {
         loading: false
       });
     } else {
-      axios.post('https://ollida-api.herokuapp.com/auth/sign_in', {
+      axios.post(baseLink + '/auth/sign_in', {
         email: this.state.email,
         password: this.state.password
       })
@@ -104,7 +105,17 @@ class LoginPage extends Component {
             localStorage.setItem("uid", res.headers.uid);
             this.props.handleLogin();
             this.props.history.push("/login/success");
-            axios.get('https://ollida-api.herokuapp.com/api/v1/users/following').then(res => {
+            axios({
+              method: 'get',
+              url: `${baseLink}/api/v1/users/following`,
+              headers: {
+                'access-token': localStorage.getItem('access-token'),
+                'client': localStorage.getItem('client'),
+                'expiry': localStorage.getItem('expiry'),
+                'token-type': localStorage.getItem('token-type'),
+                'uid': localStorage.getItem('uid')
+              }
+            }).then(res => {
               console.log(res.data);
               console.log('following');
               localStorage.setItem('userName', res.data.user_name);

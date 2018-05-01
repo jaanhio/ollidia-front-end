@@ -7,6 +7,7 @@ import IconButton from 'material-ui/IconButton';
 import StarIcon from 'material-ui-icons/Star';
 import YouTube from 'react-youtube';
 import { Link, withRouter } from 'react-router-dom';
+import { baseLink } from '../link';
 
 const NomineePageWrapper = styled.main`
   position: relative;
@@ -107,8 +108,7 @@ class NomineePage extends Component {
 
     // get required data for page
     const { url } = this.props.match;
-    axios.get(`https://ollida-api.herokuapp.com/api/v1/${url}`)
-      // axios.get(`https://57ac8db5.ngrok.io/api/v1/${url}`)
+    axios.get(`${baseLink}/api/v1/${url}`)
       .then(res => {
         const { data } = res;
         // console.log(data);
@@ -174,8 +174,19 @@ class NomineePage extends Component {
       console.log(followingArr);
       localStorage.setItem('followings', JSON.stringify(followingArr));
       // send request to update backend
-      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
-        track_id: '0'
+      axios({
+        method: 'post',
+        url: `${baseLink}/api/v1/awards/1/nominees/${this.props.match.params.id}/track`,
+        headers: {
+          'access-token': localStorage.getItem('access-token'),
+          'client': localStorage.getItem('client'),
+          'expiry': localStorage.getItem('expiry'),
+          'token-type': localStorage.getItem('token-type'),
+          'uid': localStorage.getItem('uid')
+        },
+        data: {
+          track_id: '0',
+        }
       });
       this.setState({
         followed: false,
@@ -214,8 +225,19 @@ class NomineePage extends Component {
         return following === parseInt(this.props.match.params.id, 10)
       });
       // send request to backend to update
-      axios.post(`https://ollida-api.herokuapp.com/api/v1/awards/1/nominees/${this.props.match.params.id}/track`, {
-        track_id: '1'
+      axios({
+        method: 'post',
+        url: `${baseLink}/api/v1/awards/1/nominees/${this.props.match.params.id}/track`,
+        headers: {
+          'access-token': localStorage.getItem('access-token'),
+          'client': localStorage.getItem('client'),
+          'expiry': localStorage.getItem('expiry'),
+          'token-type': localStorage.getItem('token-type'),
+          'uid': localStorage.getItem('uid')
+        },
+        data: {
+          track_id: '1',
+        }
       });
       this.setState({
         followed: true,
@@ -225,8 +247,8 @@ class NomineePage extends Component {
   }
 
   render() {
-    const { nominee, fetchingData, followed } = this.state;
-    const color = followed ? 'yellow' : 'rgba(255,255,255,0.4)';
+    const { fetchingData, followed } = this.state;
+    const color = followed ? '#ffe66b' : 'rgba(255,255,255,0.4)';
     return (
       <NomineePageWrapper>
         {
@@ -241,7 +263,7 @@ class NomineePage extends Component {
             </div>
           ) : (
               <div>
-                <img src={this.state.artiste.profile_img} style={{ width: '100%' }} />
+                <img src={this.state.artiste.profile_img} style={{ width: '100%' }} alt={this.state.artiste.name_eng}/>
                 <NomineeDetails>
                   <RankDetails>
                     <h3 style={{ margin: 0, alignSelf: 'center' }}>Rank {this.state.ranking.ranking}</h3>
@@ -255,7 +277,7 @@ class NomineePage extends Component {
                 <BreakdownSection>
                   <TitleWrapper>Digital Sales</TitleWrapper>
                   <div>
-                    <img src={this.state.digitalSales.profile_img} style={{ width: '60%', objectFit: 'scale-down' }} />
+                    <img src={this.state.digitalSales.profile_img} style={{ width: '60%', objectFit: 'scale-down' }} alt='gaon-logo' />
                     <div style={{ width: '100%', display: 'flex', }}>
                       <div style={{ width: '50%' }}>
                         <Counts>{this.state.digitalSales.download_cnt}</Counts>
@@ -286,7 +308,7 @@ class NomineePage extends Component {
                   </AlbumSection>
                   <MCountSection>
                     <TitleWrapper>Votes</TitleWrapper>
-                    <img src={this.state.mcountVotes.profile_img} style={{ width: '80%', objectFit: 'scale-down' }} />
+                    <img src={this.state.mcountVotes.profile_img} style={{ width: '80%', objectFit: 'scale-down' }} alt='mcountdown-logo' />
                     <div>
                       <Counts>{this.state.mcountVotes.votes}</Counts>
                       <Units>Votes</Units>

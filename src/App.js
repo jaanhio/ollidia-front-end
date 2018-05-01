@@ -9,12 +9,14 @@ import MyRequestsPage from './Requests/MyRequestsPage';
 import ListingRequestsPage from './Requests/ListingRequestsPage';
 import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
+import PageNotFound from './components/PageNotFound';
 import RegistrationPage from './Registration/RegistrationPage';
 import SuccessPage from './components/SuccessPage';
 import ProfilePage from './Profile/ProfilePage';
 import Footer from './components/Footer';
 import { Switch, Route } from 'react-router-dom';
 import axios from 'axios';
+import { baseLink } from './link';
 
 class App extends Component {
   constructor() {
@@ -40,8 +42,19 @@ class App extends Component {
     });
   }
 
+
+
   componentDidMount() {
-    axios.get('https://ollida-api.herokuapp.com/api/v1/awards').then(res => {
+      axios({
+      method: 'get',
+      url: baseLink + '/api/v1/awards',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      }}).then(res => {
       const { data } = res;
       this.setState({
         awardsList: data
@@ -82,6 +95,7 @@ class App extends Component {
           <Route path="/myrequests" exact component={MyRequestsPage} />
           <Route path="/listings/:id/requests" exact component={ListingRequestsPage} />
 
+          <Route component={PageNotFound} />
         </Switch>
         <Footer />
       </div>

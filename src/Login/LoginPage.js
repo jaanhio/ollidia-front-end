@@ -97,7 +97,7 @@ class LoginPage extends Component {
       })
         .then(res => {
           console.log(res);
-          if (res.headers) {
+          if (res.data) {
             localStorage.setItem("access-token", res.headers["access-token"]);
             localStorage.setItem("client", res.headers.client);
             localStorage.setItem("expiry", res.headers.expiry);
@@ -122,8 +122,28 @@ class LoginPage extends Component {
               localStorage.setItem('followings', JSON.stringify(res.data.followings.map(following => {
                 return following.nominee_id;
               })));
+              this.setState({
+                loading: false
+              });
             });
           }
+          // else {
+          //   console.log(res);
+          //   this.setState({
+          //     loading: false,
+          //     emailError: true,
+          //     passwordError: true
+          //   });
+          // }
+        })
+        .catch(error => {
+          console.log('error is');
+          console.log(error);
+          this.setState({
+            loading: false,
+            emailError: true,
+            passwordError: true
+          });
         });
     }
   };
@@ -146,7 +166,7 @@ class LoginPage extends Component {
           style={{ width: '75vw' }}
           onChange={this.handleChange("email")}
         />
-        <FormHelperText>Email does not exist</FormHelperText>
+        {/*<FormHelperText>Email does not exist</FormHelperText>*/}
       </FormControl>
     ) : (
         <FormControl>
@@ -181,7 +201,7 @@ class LoginPage extends Component {
             </InputAdornment>
           }
         />
-        <FormHelperText>Incorrect Password</FormHelperText>
+        {/*<FormHelperText>Incorrect Password</FormHelperText>*/}
       </FormControl>
     ) : (
         <FormControl>
@@ -209,6 +229,7 @@ class LoginPage extends Component {
 
     return (
       <LoginPageWrapper>
+        {this.state.emailError && <p style={{ position: 'absolute', top: '30%', color: 'red' }}>Seems like either your email or password is incorrect.</p>}
         <LoginFormWrapper autoComplete="off" onSubmit={this.handleSubmit}>
           {emailInputField}
           {passwordInputField}

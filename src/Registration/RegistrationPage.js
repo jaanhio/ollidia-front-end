@@ -51,7 +51,7 @@ const RegistrationFormWrapper = styled.form`
 
 class RegistrationPage extends Component {
   state = {
-    name:"",
+    name: "",
     nameError: false,
     nameEmpty: false,
     email: "",
@@ -79,24 +79,24 @@ class RegistrationPage extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({ loading: true });
+    this.setState({ loading: true, nameError: false, emailError: false, passwordError: false });
     let nameInputLength = this.state.name.length;
     let emailInputLength = this.state.email.length;
     console.log(emailInputLength);
     let passwordInputLength = this.state.password.length;
     if (nameInputLength === 0) {
       this.setState({
-        nameEmpty: !this.state.nameEmpty
+        nameError: true
       });
     }
     if (emailInputLength === 0) {
       this.setState({
-        emailEmpty: !this.state.emailEmpty
+        emailError: true
       });
     }
     if (passwordInputLength === 0) {
       this.setState({
-        passwordEmpty: !this.state.passwordEmpty,
+        passwordError: true,
         loading: false
       });
     } else {
@@ -136,22 +136,26 @@ class RegistrationPage extends Component {
                 return following.nominee_id;
               })));
             });
-          } else {
-            this.setState({
-              loading: false
-            });
-            if (res.data.error === "email") {
-              this.setState({ emailError: !this.state.emailError });
-            } else {
-              if (this.state.emailError) {
-                this.setState({ emailError: !this.state.emailError });
-              }
-              this.setState({ passwordError: !this.state.passwordError });
-            }
           }
+          // else {
+          //   this.setState({
+          //     loading: false
+          //   });
+          //   if (res.data.error === "email") {
+          //     this.setState({ emailError: !this.state.emailError });
+          //   } else {
+          //     if (this.state.emailError) {
+          //       this.setState({ emailError: !this.state.emailError });
+          //     }
+          //     this.setState({ passwordError: !this.state.passwordError });
+          //   }
+          // }
         })
         .catch(error => {
           console.log(error);
+          this.setState({
+
+          })
         });
     }
   };
@@ -174,7 +178,7 @@ class RegistrationPage extends Component {
           style={{ width: '75vw' }}
           onChange={this.handleChange("name")}
         />
-        <FormHelperText>name does not exist</FormHelperText>
+        <FormHelperText>Name must not be empty!</FormHelperText>
       </FormControl>
     ) : (
         <FormControl>
@@ -202,7 +206,7 @@ class RegistrationPage extends Component {
           style={{ width: '75vw' }}
           onChange={this.handleChange("email")}
         />
-        <FormHelperText>Email does not exist</FormHelperText>
+        <FormHelperText>Invalid Email</FormHelperText>
       </FormControl>
     ) : (
         <FormControl>
@@ -237,7 +241,7 @@ class RegistrationPage extends Component {
             </InputAdornment>
           }
         />
-        <FormHelperText>Incorrect Password</FormHelperText>
+        <FormHelperText>Password cannot be empty.</FormHelperText>
       </FormControl>
     ) : (
         <FormControl>

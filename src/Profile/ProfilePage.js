@@ -15,12 +15,9 @@ import Modal from 'material-ui/Modal';
 import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import { baseLink } from '../link';
-<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 
-=======
 import Dropzone from 'react-dropzone';
->>>>>>> b8abe5fe17e367db3e421228f5caa02cac9fa5be
 
 const ProfilePageWrapper = styled.main`
   position: relative;
@@ -122,7 +119,8 @@ class ProfilePage extends Component {
     value: 'one',
     userName: null,
     followings: [],
-    activeModal: -1
+    activeModal: -1,
+    selectedFile: null
   };
 
   // unfollow confirmation
@@ -169,15 +167,17 @@ class ProfilePage extends Component {
       },
       body: formPayLoad
     })
-    .then(imageFromController => {
-      this.setState({uploads: this.state.uploads.concat(imageFromController)})
-    })
+      .then(imageFromController => {
+        this.setState({ uploads: this.state.uploads.concat(imageFromController) })
+      })
   };
 
   readFile = async (files) => {
     let formPayLoad = new FormData();
     let appendFile = await formPayLoad.append('uploaded_image', files[0])
     console.log('hi')
+    console.log(await appendFile);
+    console.log(formPayLoad);
     // this.sendImageToController(formPayLoad)
   }
 
@@ -187,6 +187,20 @@ class ProfilePage extends Component {
   handleChange = (event, value) => {
     this.setState({ value });
   };
+
+  handleFileChange = (event) => {
+    const file = event.target.files[0];
+    this.setState({
+      selectedFile: file
+    });
+  }
+
+  handleFileUpload = () => {
+    console.log(this.state.selectedFile);
+    const formData = new FormData();
+    formData.append('my-file', this.state.selectedFile);
+    console.log(formData);
+  }
 
   getFollowers = () => {
     axios({
@@ -281,18 +295,18 @@ class ProfilePage extends Component {
       <ProfilePageWrapper>
         <div>
           <Dropzone onDrop={this.readFile}>
-            <AccountCircle style={{ color: 'white', fontSize: '150px' }}/>
-             {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
-            if (isDragActive) {
-              return "This file is authorized";
-            }
-            if (isDragReject) {
-              return "This file is not authorized";
-            }
-            return acceptedFiles.length || rejectedFiles.length
-              ? `Accepted ${acceptedFiles.length}, rejected ${rejectedFiles.length} files`
-              : "Try dropping some files.";
-          }}
+            <AccountCircle style={{ color: 'white', fontSize: '150px' }} />
+            {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+              if (isDragActive) {
+                return "This file is authorized";
+              }
+              if (isDragReject) {
+                return "This file is not authorized";
+              }
+              return acceptedFiles.length || rejectedFiles.length
+                ? `Accepted ${acceptedFiles.length}, rejected ${rejectedFiles.length} files`
+                : "Try dropping some files.";
+            }}
           </Dropzone>
         </div>
         <NameWrapper>{this.state.userName}</NameWrapper>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { FormControl, FormHelperText } from "material-ui/Form";
+import { FormControl } from "material-ui/Form";
 import Input, { InputAdornment, InputLabel } from "material-ui/Input";
 import IconButton from "material-ui/IconButton";
 import Button from "material-ui/Button";

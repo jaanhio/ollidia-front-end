@@ -7,7 +7,6 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import Paper from 'material-ui/Paper';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
@@ -16,19 +15,14 @@ import UnfollowIcon from 'material-ui-icons/Star';
 
 import IconButton from 'material-ui/IconButton';
 import Modal from 'material-ui/Modal';
-import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import { baseLink } from '../link';
-import { Link } from 'react-router-dom';
 
-<<<<<<< HEAD
 import Dropzone from 'react-dropzone';
-=======
 import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import green from 'material-ui/colors/green';
 import yellow from 'material-ui/colors/yellow';
 import purple from 'material-ui/colors/purple';
->>>>>>> a62460b609b75514c6d9126009f10c33f1361ca4
 
 const ProfilePageWrapper = styled.main`
   position: relative;
@@ -65,12 +59,10 @@ const FlexItem = styled.div`
   color: black;
 `
 
-<<<<<<< HEAD
 const CardDetails = styled.p`
   margin-top: 0;
   font-family: 'Alegreya Sans SC', sans-serif;
 `
-=======
 // my listings
 const PageWrapper = styled.main`
   position: relative;
@@ -90,7 +82,6 @@ const Header = styled.h3`
   margin-left: 17px;
 `
 
->>>>>>> a62460b609b75514c6d9126009f10c33f1361ca4
 // tabs
 function TabContainer(props) {
   return (
@@ -160,17 +151,13 @@ class ProfilePage extends Component {
     value: 'one',
     userName: null,
     followings: [],
-<<<<<<< HEAD
     activeModal: -1,
-    selectedFile: null
-=======
+    selectedFile: null,
     listings: [],
     approved_requests: [],
     unapproved_requests: [],
     paid_requests: [],
     history: [],
-    activeModal: -1
->>>>>>> a62460b609b75514c6d9126009f10c33f1361ca4
   };
 
   // unfollow confirmation
@@ -296,9 +283,9 @@ class ProfilePage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value, userName, followings, approved_requests, unapproved_requests, paid_requests, listings } = this.state;
+    const { value, followings, approved_requests, unapproved_requests, paid_requests, listings } = this.state;
 
-    const renderFollowings = followings.length != 0 ? (
+    const renderFollowings = followings.length !== 0 ? (
       followings.map((following, index) => {
         return (
           <FollowItem key={index}>
@@ -358,96 +345,96 @@ class ProfilePage extends Component {
         </FollowItem>
       );
 
-  // const renderMylistings
-  const renderMylistings = listings ? (
+    // const renderMylistings
+    const renderMylistings = listings ? (
 
-    listings.map((listing, index) => {
-      return (
-        <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-          <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-            <span style={{marginBottom: 5}}>Listing Posted: {listing.created_at}</span>
-            <span style={{float: 'right'}}>ID: #{listing.id}</span>
-            <br></br>
-            <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
-          </div>
-          <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-            <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} src={listing.album_pic}/></div>
-
-            <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-            <div style={{verticalAlign: 'top'}}>
-            <span style={{marginLeft: 7, fontWeight: 400}}>Album: {listing.album_name_eng}</span>
-            <br></br>
-            <span style={{marginLeft: 7}}>Price: ${listing.price}</span>
+      listings.map((listing, index) => {
+        return (
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Listing Posted: {listing.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{listing.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
             </div>
-            <div style={{marginTop: 13, marginLeft: 7}}>
-            <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-              <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
-                Requests
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={listing.album_pic} /></div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: {listing.album_name_eng}</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: ${listing.price}</span>
+                </div>
+                <div style={{ marginTop: 13, marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
+                      Requests
               </Button></Link>
-            </MuiThemeProvider></span>
-            <span><IconButton style={{padding: 0, marginLeft: -5, marginRight: -5}} color="secondary" aria-label="edit" className={classes.button}>
-              <EditIcon size="small" />
-            </IconButton></span>
-            <span><IconButton style={{padding: 0, marginLeft: -5, marginRight: -5}} aria-label="delete" className={classes.button}>
-              <DeleteIcon size="small" />
-            </IconButton></span>
-            </div>
-            </div>
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} color="secondary" aria-label="edit" className={classes.button}>
+                    <EditIcon size="small" />
+                  </IconButton></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
+              </div>
 
+            </div>
           </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no listings</p>
         </div>
-      )
-    })
-  ) : (
-      <div>
-        <p>there are no listings</p>
-      </div>
-    );
+      );
 
-  // const renderApprovedRequests
-  const renderApprovedRequests = approved_requests ? (
-    approved_requests.map((request, index) => {
-      return (
+    // const renderApprovedRequests
+    const renderApprovedRequests = approved_requests ? (
+      approved_requests.map((request, index) => {
+        return (
 
-        <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-          <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-            <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
-            <span style={{float: 'right'}}>ID: #{request.id}</span>
-            <br></br>
-            <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
-          </div>
-          <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-            <div style={{height: '100px', display: 'inline-block'}}>Image here</div>
-
-            <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-            <div style={{verticalAlign: 'top'}}>
-            <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
-            <br></br>
-            <span style={{marginLeft: 7}}>Price: $123</span>
-            <br></br>
-            <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
             </div>
-            <div style={{marginLeft: 7}}>
-            <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-              <Button size="small" variant="raised" color="primary" className={classes.margin}>
-                Pay Now
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}>Image here</div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="primary" className={classes.margin}>
+                      Pay Now
               </Button>
-            </MuiThemeProvider></span>
-            <span><IconButton style={{padding: 0, marginLeft: -5, marginRight: -5}} aria-label="delete" className={classes.button}>
-              <DeleteIcon size="small" />
-            </IconButton></span>
-            </div>
-            </div>
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
+              </div>
 
+            </div>
           </div>
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no approved requests</p>
         </div>
-      )
-    })
-  ) : (
-      <div>
-        <p>there are no approved requests</p>
-      </div>
-    );
+      );
 
     // const renderUnApprovedRequests
     const renderUnApprovedRequests = unapproved_requests ? (
@@ -455,33 +442,33 @@ class ProfilePage extends Component {
         return (
 
           <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-              <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
-              <span style={{float: 'right'}}>ID: #{request.id}</span>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
               <br></br>
-              <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
             </div>
-            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-              <div style={{height: '100px', display: 'inline-block'}}>Image here</div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}>Image here</div>
 
-              <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-              <div style={{verticalAlign: 'top'}}>
-              <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
-              <br></br>
-              <span style={{marginLeft: 7}}>Price: $123</span>
-              <br></br>
-              <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
-              </div>
-              <div style={{marginLeft: 7}}>
-              <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-                <Button size="small" variant="raised" color="secondary" className={classes.margin}>
-                  Edit
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
+                      Edit
                 </Button>
-              </MuiThemeProvider></span>
-              <span><IconButton style={{padding: 0, marginLeft: -5, marginRight: -5}} aria-label="delete" className={classes.button}>
-                <DeleteIcon size="small" />
-              </IconButton></span>
-              </div>
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
               </div>
 
             </div>
@@ -494,51 +481,51 @@ class ProfilePage extends Component {
         </div>
       );
 
-      // const renderPaidRequests
-      const renderPaidRequests = paid_requests ? (
-        paid_requests.map((request, index) => {
-          return (
+    // const renderPaidRequests
+    const renderPaidRequests = paid_requests ? (
+      paid_requests.map((request, index) => {
+        return (
 
-            <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-              <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-                <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
-                <span style={{float: 'right'}}>ID: #{request.id}</span>
-                <br></br>
-                <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
-              </div>
-              <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-                <div style={{height: '100px', display: 'inline-block'}}>Image here</div>
-
-                <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-                <div style={{verticalAlign: 'top'}}>
-                <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
-                <br></br>
-                <span style={{marginLeft: 7}}>Price: $123</span>
-                <br></br>
-                <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
-                </div>
-                <div style={{marginLeft: 7}}>
-                <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-                  <Button size="small" variant="raised" color="secondary" className={classes.margin}>
-                    Buy Again
-                  </Button>
-                </MuiThemeProvider></span>
-                </div>
-                </div>
-
-              </div>
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
             </div>
-          )
-        })
-      ) : (
-          <div>
-            <p>there are no unapproved requests</p>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}>Image here</div>
+
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
+                      Buy Again
+                  </Button>
+                  </MuiThemeProvider></span>
+                </div>
+              </div>
+
+            </div>
           </div>
-        );
+        )
+      })
+    ) : (
+        <div>
+          <p>there are no unapproved requests</p>
+        </div>
+      );
 
     return (
       <ProfilePageWrapper>
-        <div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <Dropzone onDrop={this.readFile}>
             <AccountCircle style={{ color: 'white', fontSize: '150px' }} />
             {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
@@ -555,64 +542,65 @@ class ProfilePage extends Component {
           </Dropzone>
         </div>
         <NameWrapper>{this.state.userName}</NameWrapper>
-          <div >
-            <AppBar position="static" style={{textAlign: 'center'}}>
-              <Tabs
-                value={value}
-                onChange={this.handleChange}
-                classes={{root: classes.tabsRoot, indicator: classes.tabsIndicator}}
-                centered
-              >
-                <Tab
-                  value="one"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="following"
-                />
-                <Tab
-                  value="two"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="listings"
-                />
-                <Tab
-                  value="three"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="orders"
-                />
-                <Tab
-                  value="four"
-                  disableRipple
-                  classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-                  label="history"
-                />
-              </Tabs>
-            </AppBar>
-            {value === 'one' && <TabContainer><FollowingWrapper>{renderFollowings}</FollowingWrapper></TabContainer>}
-            {value === 'two' && <TabContainer><PageWrapper>
-              <Header>Your Listings</Header>
-              <Section>
-                {renderMylistings}
-              </Section>
-            </PageWrapper></TabContainer>}
-            {value === 'three' && <TabContainer><PageWrapper>
-              <Header>Approved</Header>
-              <Section>
-                {renderApprovedRequests}
-              </Section>
-              <Header>Unapproved</Header>
-              <Section>
-                {renderUnApprovedRequests}
-              </Section>
-            </PageWrapper></TabContainer>}
-            {value === 'four' && <TabContainer><PageWrapper>
-              <Header>Your Payment History</Header>
-              <Section>
-                {renderPaidRequests}
-              </Section>
-            </PageWrapper></TabContainer>}
-          </div>
+        <div >
+          <AppBar position="static" style={{ textAlign: 'center', padding: '0 20px', backgroundColor: 'black' }}>
+            <Tabs
+              value={value}
+              onChange={this.handleChange}
+              classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
+              scrollable
+              centered
+            >
+              <Tab
+                value="one"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="following"
+              />
+              <Tab
+                value="two"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="listings"
+              />
+              <Tab
+                value="three"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="orders"
+              />
+              <Tab
+                value="four"
+                disableRipple
+                classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+                label="history"
+              />
+            </Tabs>
+          </AppBar>
+          {value === 'one' && <TabContainer><FollowingWrapper>{renderFollowings}</FollowingWrapper></TabContainer>}
+          {value === 'two' && <TabContainer><PageWrapper>
+            <Header>Your Listings</Header>
+            <Section>
+              {renderMylistings}
+            </Section>
+          </PageWrapper></TabContainer>}
+          {value === 'three' && <TabContainer><PageWrapper>
+            <Header>Approved</Header>
+            <Section>
+              {renderApprovedRequests}
+            </Section>
+            <Header>Unapproved</Header>
+            <Section>
+              {renderUnApprovedRequests}
+            </Section>
+          </PageWrapper></TabContainer>}
+          {value === 'four' && <TabContainer><PageWrapper>
+            <Header>Your Payment History</Header>
+            <Section>
+              {renderPaidRequests}
+            </Section>
+          </PageWrapper></TabContainer>}
+        </div>
       </ProfilePageWrapper>
     );
   }

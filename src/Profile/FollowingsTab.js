@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+
 import { Link } from 'react-router-dom';
 import Avatar from 'material-ui/Avatar';
 import Typography from 'material-ui/Typography';
@@ -118,7 +118,7 @@ class FollowingsTab extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value, followings, approved_requests } = this.state;
+    const { value, followings } = this.state;
 
     const renderFollowings = followings.length !== 0 ? (
       followings.map((following, index) => {

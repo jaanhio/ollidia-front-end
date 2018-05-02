@@ -3,10 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import Select from 'material-ui/Select';
 import { withStyles } from 'material-ui/styles';
 import grey from 'material-ui/colors/grey';
-import { Link } from 'react-router-dom';
 
 import Dialog, {
   DialogActions,
@@ -16,8 +14,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 
 import Input, { InputLabel } from 'material-ui/Input';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
+import { FormControl } from 'material-ui/Form';
 import Button from 'material-ui/Button';
 
 const styles = () => ({

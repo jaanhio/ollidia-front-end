@@ -101,7 +101,7 @@ class RegistrationPage extends Component {
       });
     } else {
       axios
-        .post(baseLink + '/auth', {
+        .post('http://localhost:3000/auth', {
           name: this.state.name,
           email: this.state.email,
           password: this.state.password
@@ -304,4 +304,3 @@ class RegistrationPage extends Component {
 }
 
 export default withStyles(styles)(withRouter(RegistrationPage));
-

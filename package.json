@@ -29,5 +29,5 @@
     "predeploy": "CI=false yarn run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "http://jaanhio.github.io/ollidia-front-end"
+  "homepage": "http://ollida.club"
 }

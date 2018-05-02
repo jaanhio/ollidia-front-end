@@ -2,7 +2,6 @@ import React from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 const PageShell = Page => {
-  console.log('animation called');
   return props => (
     <div>
       <ReactCSSTransitionGroup

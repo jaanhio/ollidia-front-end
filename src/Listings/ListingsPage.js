@@ -101,14 +101,17 @@ class ListingsPage extends Component {
         customer_id: customer_id,
         quantity: quantity,
         approved: false,
-        paid: true
+        paid: false
       }
-    })
+    }).then(res => {
+      this.props.history.push('/myrequests')
+    });
   };
 
   componentDidMount() {
     console.log(this.props.match.params.id);
     const albumId = this.props.match.params.id;
+
     axios({
       method: 'get',
       url: `http://localhost:3000/api/v1/albums/${albumId}/listings`,

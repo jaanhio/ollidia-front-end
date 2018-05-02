@@ -10,6 +10,7 @@ import ListingRequestsPage from './Requests/ListingRequestsPage';
 import NomineePage from './Nominee/NomineePage';
 import LoginPage from './Login/LoginPage';
 import PageNotFound from './components/PageNotFound';
+import PageShell from './components/PageShell';
 import RegistrationPage from './Registration/RegistrationPage';
 import SuccessPage from './components/SuccessPage';
 import ProfilePage from './Profile/ProfilePage';
@@ -45,7 +46,7 @@ class App extends Component {
 
 
   componentDidMount() {
-      axios({
+    axios({
       method: 'get',
       url: baseLink + '/api/v1/awards',
       headers: {
@@ -54,7 +55,8 @@ class App extends Component {
         'expiry': localStorage.getItem('expiry'),
         'token-type': localStorage.getItem('token-type'),
         'uid': localStorage.getItem('uid')
-      }}).then(res => {
+      }
+    }).then(res => {
       const { data } = res;
       this.setState({
         awardsList: data
@@ -87,7 +89,7 @@ class App extends Component {
           <Route path="/logout/success" exact render={() => <SuccessPage type="logout" />} />
           <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominees/:id" exact render={() => <NomineePage isLoggedIn={isLoggedIn} userFollowings={userFollowings} />} />
-          <Route path="/users/profile" component={ProfilePage} />
+          <Route path="/users/profile" component={PageShell(ProfilePage)} />
 
           <Route path="/albums/:id/listings" exact component={ListingsPage} />
           <Route path="/mylistings" exact component={MyListingsPage} />

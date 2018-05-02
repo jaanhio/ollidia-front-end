@@ -272,34 +272,34 @@ class ProfilePage extends Component {
         'uid': localStorage.getItem('uid')
       }
     }).then(res => {
-        const { data } = res; // json file
-        console.log(data);
+      const { data } = res; // json file
+      console.log(data);
 
-        this.setState({
-          approved_requests: data.requests.filter(req => req['paid'] === false && req['approved'] === true),
-          unapproved_requests: data.requests.filter(req => req['paid'] === false && req['approved'] === false),
-          paid_requests: data.requests.filter(req => req['paid'] === true && req['approved'] === true)
-        });
+      this.setState({
+        approved_requests: data.requests.filter(req => req['paid'] === false && req['approved'] === true),
+        unapproved_requests: data.requests.filter(req => req['paid'] === false && req['approved'] === false),
+        paid_requests: data.requests.filter(req => req['paid'] === true && req['approved'] === true)
       });
+    });
 
-      axios({
-        method: 'get',
-        url: 'http://localhost:3000/api/v1/mylistings/',
-        headers: {
-          'access-token': localStorage.getItem('access-token'),
-          'client': localStorage.getItem('client'),
-          'expiry': localStorage.getItem('expiry'),
-          'token-type': localStorage.getItem('token-type'),
-          'uid': localStorage.getItem('uid')
-        }
-      }).then(res => {
-          const { data } = res; // json file
-          console.log(data);
+    axios({
+      method: 'get',
+      url: 'http://localhost:3000/api/v1/mylistings/',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      }
+    }).then(res => {
+      const { data } = res; // json file
+      console.log(data);
 
-          this.setState({
-            listings: data.listings
-          });
-        });
+      this.setState({
+        listings: data.listings
+      });
+    });
   }
 
   componentDidMount() {
@@ -372,51 +372,53 @@ class ProfilePage extends Component {
         </FollowItem>
       );
 
-  // const renderMylistings
-  const renderMylistings = listings ? (
+    // const renderMylistings
+    const renderMylistings = listings ? (
 
-    listings.map((listing, index) => {
-      return (
-        <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-          <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-            <span style={{marginBottom: 5}}>Listing Posted: {listing.created_at}</span>
-            <span style={{float: 'right'}}>ID: #{listing.id}</span>
-            <br></br>
-            <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
-          </div>
-          <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-            <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} src={listing.album_pic}/></div>
-            <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-            <div style={{verticalAlign: 'top'}}>
-            <span style={{marginLeft: 7, fontWeight: 400}}>Album: {listing.album_name_eng}</span>
-            <br></br>
-            <span style={{marginLeft: 7}}>Price: ${listing.price}</span>
+      listings.map((listing, index) => {
+        return (
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Listing Posted: {listing.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{listing.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}># of Pending Requests</span>
             </div>
             <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
-              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={listing.album_pic} /></div>
-
+              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={listing.album_pic} />
+              </div>
               <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
                 <div style={{ verticalAlign: 'top' }}>
                   <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: {listing.album_name_eng}</span>
                   <br></br>
                   <span style={{ marginLeft: 7 }}>Price: ${listing.price}</span>
                 </div>
-                <div style={{ marginTop: 13, marginLeft: 7 }}>
-                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
-                    <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
-                      Requests
+                <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+                  <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={listing.album_pic} /></div>
+
+                  <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                    <div style={{ verticalAlign: 'top' }}>
+                      <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: {listing.album_name_eng}</span>
+                      <br></br>
+                      <span style={{ marginLeft: 7 }}>Price: ${listing.price}</span>
+                    </div>
+                    <div style={{ marginTop: 13, marginLeft: 7 }}>
+                      <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                        <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
+                          Requests
               </Button></Link>
 
-            </MuiThemeProvider></span>
-            <span><IconButton style={{padding: 0, marginLeft: -8, marginRight: -8}} color="secondary" aria-label="edit" className={classes.button}>
-              <EditIcon size="small" />
-            </IconButton></span>
-            <span><IconButton style={{padding: 0, marginLeft: -8, marginRight: -8}} aria-label="delete" className={classes.button}>
-              <DeleteIcon size="small" />
-            </IconButton></span>
-            </div>
-            </div>
-
+                      </MuiThemeProvider></span>
+                      <span><IconButton style={{ padding: 0, marginLeft: -8, marginRight: -8 }} color="secondary" aria-label="edit" className={classes.button}>
+                        <EditIcon size="small" />
+                      </IconButton></span>
+                      <span><IconButton style={{ padding: 0, marginLeft: -8, marginRight: -8 }} aria-label="delete" className={classes.button}>
+                        <DeleteIcon size="small" />
+                      </IconButton></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )
@@ -427,43 +429,43 @@ class ProfilePage extends Component {
         </div>
       );
 
-  // const renderApprovedRequests
-  const renderApprovedRequests = approved_requests ? (
-    approved_requests.map((request, index) => {
-      return (
+    // const renderApprovedRequests
+    const renderApprovedRequests = approved_requests ? (
+      approved_requests.map((request, index) => {
+        return (
 
-        <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-          <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-            <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
-            <span style={{float: 'right'}}>ID: #{request.id}</span>
-            <br></br>
-            <span style={{fontWeight: 400, paddingTop: 10}}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
-          </div>
-          <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-            <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} src={request.album_pic}/></div>
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
+            </div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={request.album_pic} /></div>
 
-            <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-            <div style={{verticalAlign: 'top'}}>
-            <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
-            <br></br>
-            <span style={{marginLeft: 7}}>Price: $123</span>
-            <br></br>
-            <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
-            </div>
-            <div style={{marginLeft: 7}}>
-            <span style={{padding: 0, marginRight: 7}}><MuiThemeProvider theme={theme}>
-            <Checkout
-              name={'Pay Now'}
-              description={'Kpop'}
-              amount={request.total_price}
-              request_id={request.id}
-            />
-            </MuiThemeProvider></span>
-            <span><IconButton style={{padding: 0, marginLeft: -8, marginRight: -8}} aria-label="delete" className={classes.button}>
-              <DeleteIcon size="small" />
-            </IconButton></span>
-            </div>
-            </div>
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ padding: 0, marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Checkout
+                      name={'Pay Now'}
+                      description={'Kpop'}
+                      amount={request.total_price}
+                      request_id={request.id}
+                    />
+                  </MuiThemeProvider></span>
+                  <span><IconButton style={{ padding: 0, marginLeft: -8, marginRight: -8 }} aria-label="delete" className={classes.button}>
+                    <DeleteIcon size="small" />
+                  </IconButton></span>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -485,23 +487,23 @@ class ProfilePage extends Component {
               <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
               <span style={{ float: 'right' }}>ID: #{request.id}</span>
               <br></br>
-              <span style={{fontWeight: 400, paddingTop: 10}}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
             </div>
-            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-              <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} src={request.album_pic}/></div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={request.album_pic} /></div>
 
-              <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-              <div style={{verticalAlign: 'top'}}>
-              <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
-              <br></br>
-              <span style={{marginLeft: 7}}>Price: $123</span>
-              <br></br>
-              <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
-              </div>
-              <div style={{marginLeft: 7}}>
-              <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-                <Button size="small" variant="raised" color="secondary" className={classes.margin}>
-                  Edit
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
+                </div>
+                <div style={{ marginLeft: 7 }}>
+                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
+                      Edit
                 </Button>
                   </MuiThemeProvider></span>
                   <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
@@ -520,28 +522,28 @@ class ProfilePage extends Component {
         </div>
       );
 
-      // const renderPaidRequests
-      const renderPaidRequests = paid_requests ? (
-        paid_requests.map((request, index) => {
-          return (
+    // const renderPaidRequests
+    const renderPaidRequests = paid_requests ? (
+      paid_requests.map((request, index) => {
+        return (
 
-            <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-              <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC'}}>
-                <span style={{marginBottom: 5}}>Request Placed: {request.created_at}</span>
-                <span style={{float: 'right'}}>ID: #{request.id}</span>
-                <br></br>
-                <span style={{fontWeight: 400, paddingTop: 10}}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
-              </div>
-              <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-                <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} src={request.album_pic}/></div>
+          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
+            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
+              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
+              <span style={{ float: 'right' }}>ID: #{request.id}</span>
+              <br></br>
+              <span style={{ fontWeight: 400, paddingTop: 10 }}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
+            </div>
+            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
+              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={request.album_pic} /></div>
 
-                <div style={{verticalAlign: 'top', display: 'inline-block'}}>
-                <div style={{verticalAlign: 'top'}}>
-                <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
-                <br></br>
-                <span style={{marginLeft: 7}}>Price: $123</span>
-                <br></br>
-                <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
+              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
+                <div style={{ verticalAlign: 'top' }}>
+                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Price: $123</span>
+                  <br></br>
+                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
                 </div>
                 <div style={{ marginLeft: 7 }}>
                   <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>

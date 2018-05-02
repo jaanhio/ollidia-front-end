@@ -87,15 +87,15 @@ class App extends Component {
           <Route path="/register/success" exact render={() => <SuccessPage type="register" />} />
           <Route path="/login/success" exact render={() => <SuccessPage type="login" />} />
           <Route path="/logout/success" exact render={() => <SuccessPage type="logout" />} />
-          <Route path="/awards/:id" exact component={PageShell(AwardsPage)} />
+          <Route path="/awards/:id" exact component={AwardsPage} />
           <Route path="/awards/:id/nominees/:id" exact render={() => <NomineePage isLoggedIn={isLoggedIn} userFollowings={userFollowings} />} />
           <Route path="/users/profile" component={PageShell(ProfilePage)} />
 
-          <Route path="/albums/:id/listings" exact component={PageShell(ListingsPage)} />
-          <Route path="/mylistings" exact component={PageShell(MyListingsPage)} />
+          <Route path="/albums/:id/listings" exact component={ListingsPage} />
+          <Route path="/mylistings" exact component={MyListingsPage} />
 
-          <Route path="/myrequests" exact component={PageShell(MyRequestsPage)} />
-          <Route path="/listings/:id/requests" exact component={PageShell(ListingRequestsPage)} />
+          <Route path="/myrequests" exact component={MyRequestsPage} />
+          <Route path="/listings/:id/requests" exact component={ListingRequestsPage} />
 
           <Route component={PageNotFound} />
         </Switch>

@@ -153,7 +153,6 @@ class ProfilePage extends Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-
     return (
       <ProfilePageWrapper>
         <div style={{ display: 'flex', justifyContent: 'center' }}>

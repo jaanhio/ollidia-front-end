@@ -79,7 +79,11 @@ class AwardsPage extends Component {
       fetchingData: true
     });
     const awardId = this.props.match.params.id;
-    axios.get(`${baseLink}/api/v1/awards/${awardId}`)
+
+      axios({
+        method: 'get',
+        url: `https://ollida-api.herokuapp.com/api/v1/awards/${awardId}`,
+      })
       .then(res => {
         const { data } = res;
         console.log(data);
@@ -88,7 +92,7 @@ class AwardsPage extends Component {
           nominationCycles: data.nomination_cycles,
           maxCycleID: data.max_cycle_id,
           awardNominees: data.nominees,
-        });
+        })
       })
       .then(() => {
         const initialResults = this.state.awardNominees.filter(nominee => {

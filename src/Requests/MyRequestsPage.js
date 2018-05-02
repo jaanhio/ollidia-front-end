@@ -2,18 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
-import { FormControl } from 'material-ui/Form';
-import { InputLabel } from 'material-ui/Input';
-import Select from 'material-ui/Select';
-
 import grey from 'material-ui/colors/grey';
-import { Link } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import Button from 'material-ui/Button';
-import EditIcon from 'material-ui-icons/ModeEdit';
-import DeleteIcon from 'material-ui-icons/Delete';
 
 // import Icon from 'material-ui/Icon';
 // import IconButton from 'material-ui/IconButton';

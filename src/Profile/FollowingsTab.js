@@ -73,7 +73,7 @@ class FollowingsTab extends Component {
   handleUnfollow = (award_id, nominee_id) => {
     axios({
       method: 'post',
-      url: `${baseLink}/api/v1/awards/${award_id}/nominees/${nominee_id}/track`,
+      url: `${baseLink()}/api/v1/awards/${award_id}/nominees/${nominee_id}/track`,
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),
@@ -94,7 +94,7 @@ class FollowingsTab extends Component {
   getFollowers = () => {
     axios({
       method: 'get',
-      url: baseLink + '/api/v1/users/following',
+      url: `${baseLink()}/api/v1/users/following`,
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

@@ -1,6 +1,10 @@
 
-export const baseLink = 'http://localhost:3000'
-// export const baseLink = 'https://ollida-api.herokuapp.com'
-// export const baseLink = 'http://localhost:3000'
-// export const baseLink = 'https://ollida-api.herokuapp.com'
-// export const baseLink = 'http://67786531.ngrok.io'
+export const baseLink = () => {
+  let baseLink;
+  if (window.location.hostname === 'localhost') {
+    baseLink = 'http://localhost:3001'
+  } else {
+    baseLink = 'https://ollida-api.herokuapp.com'
+  }
+  return baseLink;
+}

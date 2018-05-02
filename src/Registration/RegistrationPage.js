@@ -101,7 +101,7 @@ class RegistrationPage extends Component {
       });
     } else {
       axios
-        .post(baseLink + '/auth', {
+        .post(baseLink() + '/auth', {
           name: this.state.name,
           email: this.state.email,
           password: this.state.password
@@ -120,7 +120,7 @@ class RegistrationPage extends Component {
             this.props.history.push("/register/success");
             axios({
               method: 'get',
-              url: `${baseLink}/api/v1/users/following`,
+              url: `${baseLink()}/api/v1/users/following`,
               headers: {
                 'access-token': localStorage.getItem('access-token'),
                 'client': localStorage.getItem('client'),

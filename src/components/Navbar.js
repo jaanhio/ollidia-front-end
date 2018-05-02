@@ -43,7 +43,7 @@ class NavBar extends Component {
     console.log('logging out');
     axios({
       method: 'delete',
-      url: baseLink + '/auth/sign_out',
+      url: baseLink() + '/auth/sign_out',
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

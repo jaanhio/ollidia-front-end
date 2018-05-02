@@ -19,7 +19,7 @@ const errorPayment = data => {
 };
 
 const onToken = (amount, description, request_id) => token =>
-  axios.post(`${baseLink}/api/v1/requests/${request_id}/charge`,
+  axios.post(`${baseLink()}/api/v1/requests/${request_id}/charge`,
     {
       description,
       source: token.id,

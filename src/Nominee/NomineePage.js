@@ -108,7 +108,7 @@ class NomineePage extends Component {
 
     // get required data for page
     const { url } = this.props.match;
-    axios.get(`${baseLink}/api/v1/${url}`)
+    axios.get(`${baseLink()}/api/v1/${url}`)
       .then(res => {
         const { data } = res;
         // console.log(data);
@@ -176,7 +176,7 @@ class NomineePage extends Component {
       // send request to update backend
       axios({
         method: 'post',
-        url: `${baseLink}/api/v1/awards/1/nominees/${this.props.match.params.id}/track`,
+        url: `${baseLink()}/api/v1/awards/1/nominees/${this.props.match.params.id}/track`,
         headers: {
           'access-token': localStorage.getItem('access-token'),
           'client': localStorage.getItem('client'),
@@ -227,7 +227,7 @@ class NomineePage extends Component {
       // send request to backend to update
       axios({
         method: 'post',
-        url: `${baseLink}/api/v1/awards/1/nominees/${this.props.match.params.id}/track`,
+        url: `${baseLink()}/api/v1/awards/1/nominees/${this.props.match.params.id}/track`,
         headers: {
           'access-token': localStorage.getItem('access-token'),
           'client': localStorage.getItem('client'),

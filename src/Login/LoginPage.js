@@ -91,7 +91,7 @@ class LoginPage extends Component {
         loading: false
       });
     } else {
-      axios.post(baseLink + '/auth/sign_in', {
+      axios.post(baseLink() + '/auth/sign_in', {
         email: this.state.email,
         password: this.state.password
       })
@@ -107,7 +107,7 @@ class LoginPage extends Component {
             this.props.history.push("/login/success");
             axios({
               method: 'get',
-              url: `${baseLink}/api/v1/users/following`,
+              url: `${baseLink()}/api/v1/users/following`,
               headers: {
                 'access-token': localStorage.getItem('access-token'),
                 'client': localStorage.getItem('client'),
@@ -267,4 +267,3 @@ class LoginPage extends Component {
 }
 
 export default withStyles(styles)(withRouter(LoginPage));
-

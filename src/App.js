@@ -48,7 +48,7 @@ class App extends Component {
   componentDidMount() {
     axios({
       method: 'get',
-      url: baseLink + '/api/v1/awards',
+      url: baseLink() + '/api/v1/awards',
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

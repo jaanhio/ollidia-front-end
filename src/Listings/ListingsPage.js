@@ -87,7 +87,7 @@ class ListingsPage extends Component {
   handleRequest = (listing_id, customer_id, quantity) => {
     axios({
       method: 'post',
-      url: baseLink + '/api/v1/requests',
+      url: baseLink() + '/api/v1/requests',
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),
@@ -113,7 +113,7 @@ class ListingsPage extends Component {
 
     axios({
       method: 'get',
-      url: `${baseLink}/api/v1/albums/${albumId}/listings`,
+      url: `${baseLink()}/api/v1/albums/${albumId}/listings`,
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

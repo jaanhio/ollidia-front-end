@@ -71,7 +71,7 @@ class ListingRequestsPage extends Component {
   handleRequest = (request_id, customer_id, listing_id, quantity) => {
     axios({
       method: 'patch',
-      url: baseLink + '/api/v1/myrequests',
+      url: baseLink() + '/api/v1/myrequests',
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

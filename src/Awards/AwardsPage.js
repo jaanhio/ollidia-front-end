@@ -82,7 +82,7 @@ class AwardsPage extends Component {
 
       axios({
         method: 'get',
-        url: `${baseLink}/api/v1/awards/${awardId}`,
+        url: `${baseLink()}/api/v1/awards/${awardId}`,
       })
       .then(res => {
         const { data } = res;

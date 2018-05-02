@@ -73,7 +73,7 @@ class MyRequestsPage extends Component {
   componentDidMount() {
     axios({
       method: 'get',
-      url: baseLink + '/api/v1/myrequests/',
+      url: baseLink() + '/api/v1/myrequests/',
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

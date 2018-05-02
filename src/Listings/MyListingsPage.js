@@ -70,7 +70,7 @@ class MyListingsPage extends Component {
   componentDidMount() {
       axios({
         method: 'get',
-        url: baseLink + '/api/v1/mylistings/',
+        url: baseLink() + '/api/v1/mylistings/',
         headers: {
           'access-token': localStorage.getItem('access-token'),
           'client': localStorage.getItem('client'),

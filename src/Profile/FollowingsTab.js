@@ -94,7 +94,7 @@ class FollowingsTab extends Component {
   getFollowers = () => {
     axios({
       method: 'get',
-      url: baseLink + '/api/v1/users/following',
+      url: `${baseLink}/api/v1/users/following`,
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

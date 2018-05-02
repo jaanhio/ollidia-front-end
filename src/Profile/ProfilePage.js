@@ -155,9 +155,9 @@ class ProfilePage extends Component {
       },
       data: formPayLoad
     })
-    .then(response => {
-      this.setState({ userAvatar: response.data})
-    })
+      .then(response => {
+        this.setState({ userAvatar: response.data })
+      })
   }
 
   // tab change
@@ -191,20 +191,22 @@ class ProfilePage extends Component {
         'uid': localStorage.getItem('uid')
       }
     })
-    .then(res => {
-      const { data } = res;
-      this.setState({
-        userName: data.user_name,
-        userAvatar: data.user_avatar
+      .then(res => {
+        const { data } = res;
+        this.setState({
+          userName: data.user_name,
+          userAvatar: data.user_avatar
+        });
       });
-    });
   };
 
   getRequests = () => {
 
     axios({
       method: 'get',
-      url: 'http://localhost:3000/api/v1/myrequests/',
+      // url: 'http://localhost:3000/api/v1/myrequests/',
+      // url: '/api/v1/myrequests/',
+      url: `${baseLink}/api/v1/myrequests`,
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),
@@ -225,7 +227,8 @@ class ProfilePage extends Component {
 
     axios({
       method: 'get',
-      url: 'http://localhost:3000/api/v1/mylistings/',
+      // url: 'http://9e33db74.ngrok.io/api/v1/mylistings/',
+      url: `${baseLink}/api/v1/mylistings`,
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),
@@ -453,15 +456,15 @@ class ProfilePage extends Component {
             accept="image/jpeg, image/png"
             multiple={false}
             onDrop={this.uploadAvatar}
-            style={{border: 'none'}}
+            style={{ border: 'none' }}
           >
             {this.state.userAvatar == 'n/a'
               ? <AccountCircle style={{ color: 'white', fontSize: '120px' }} />
               : <Avatar
-                  alt={this.state.userName}
-                  src={this.state.userAvatar}
-                  className={classes.userAvatar}
-                />
+                alt={this.state.userName}
+                src={this.state.userAvatar}
+                className={classes.userAvatar}
+              />
             }
           </Dropzone>
         </div>

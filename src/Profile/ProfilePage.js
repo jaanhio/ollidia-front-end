@@ -278,15 +278,8 @@ class ProfilePage extends Component {
                   <br></br>
                   <span style={{ marginLeft: 7 }}>Price: ${listing.price}</span>
                 </div>
-                <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
-                  <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={listing.album_pic} /></div>
 
-                  <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
-                    <div style={{ verticalAlign: 'top' }}>
-                      <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: {listing.album_name_eng}</span>
-                      <br></br>
-                      <span style={{ marginLeft: 7 }}>Price: ${listing.price}</span>
-                    </div>
+
                     <div style={{ marginTop: 13, marginLeft: 7 }}>
                       <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
                         <Link to={`/listings/${listing.id}/requests`} style={{ textDecoration: 'none', color: 'white' }} key={listing.id}><Button size="small" variant="raised" color="primary" className={classes.margin}>
@@ -301,8 +294,7 @@ class ProfilePage extends Component {
                         <DeleteIcon size="small" />
                       </IconButton></span>
                     </div>
-                  </div>
-                </div>
+      
               </div>
             </div>
           </div>

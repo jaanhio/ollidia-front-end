@@ -277,6 +277,7 @@ class ProfilePage extends Component {
   }
 
   componentDidMount() {
+    // debugger
     window.scrollTo(0, 0);
     this.getFollowers();
   };

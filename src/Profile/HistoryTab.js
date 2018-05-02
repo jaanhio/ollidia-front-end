@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { baseLink } from '../link';
+import Request from './Request'
+import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
-import { baseLink } from '../link';
-import { withStyles, MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import green from 'material-ui/colors/green';
 import yellow from 'material-ui/colors/yellow';
-import purple from 'material-ui/colors/purple';
 
 const PageWrapper = styled.main`
   position: relative;
@@ -26,22 +25,7 @@ const Header = styled.h3`
   font-weight: 300;
   margin-left: 17px;
 `
-
 const styles = theme => ({
-  nomineeAvatar: {
-    width: 80,
-    height: 80,
-  },
-  paper: {
-    position: 'absolute',
-    width: '70vw',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
   button: {
     margin: theme.spacing.unit,
   }
@@ -49,9 +33,7 @@ const styles = theme => ({
 
 const theme = createMuiTheme({
   palette: {
-    primary: green,
-    secondary: yellow,
-    tertiary: purple
+    primary: yellow
   },
 });
 
@@ -96,51 +78,36 @@ class HistoryTab extends Component {
     const renderPaidRequests = paid_requests ? (
       paid_requests.map((request, index) => {
         return (
-
-          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
-              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
-              <span style={{ float: 'right' }}>ID: #{request.id}</span>
-              <br></br>
-              <span style={{ fontWeight: 400, paddingTop: 10 }}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
+          <Request
+            createdAt={request.created_at}
+            requestId={request.id}
+            totalPrice={request.total_price}
+            quantity={request.quantity}
+            albumPic={request.album_pic}
+          >
+            <div style={{ marginLeft: 7 }}>
+              <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
+                <Button size="small" variant="raised" color="primary" className={classes.button}>
+                  Buy Again
+              </Button>
+              </MuiThemeProvider></span>
             </div>
-            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
-              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ alt: 'album_pic', maxHeight: '100%', maxWidth: '100%' }} src={request.album_pic} /></div>
-
-              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
-                <div style={{ verticalAlign: 'top' }}>
-                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
-                  <br></br>
-                  <span style={{ marginLeft: 7 }}>Price: $123</span>
-                  <br></br>
-                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
-                </div>
-                <div style={{ marginLeft: 7 }}>
-                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
-                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
-                      Buy Again
-                  </Button>
-                  </MuiThemeProvider></span>
-                </div>
-              </div>
-
-            </div>
-          </div>
+          </Request>
         )
       })
     ) : (
-        <div>
-          <p>there are no unapproved requests</p>
-        </div>
-      );
+      <div>
+        <p>there are no unapproved requests</p>
+      </div>
+    );
 
     return (
-     <PageWrapper>
-            <Header>Your Payment History</Header>
-            <Section>
-              {renderPaidRequests}
-            </Section>
-          </PageWrapper>
+       <PageWrapper>
+         <Header>Your Payment History</Header>
+         <Section>
+           {renderPaidRequests}
+         </Section>
+       </PageWrapper>
     );
   }
 }

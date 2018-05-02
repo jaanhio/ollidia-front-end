@@ -22,6 +22,9 @@ import green from 'material-ui/colors/green';
 import yellow from 'material-ui/colors/yellow';
 import purple from 'material-ui/colors/purple';
 
+import Checkout from './Checkout';
+// import StripeCheckout from 'react-stripe-checkout';
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -77,10 +80,20 @@ class MyRequestsPage extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3000/api/v1/myrequests/')
-      .then(res => {
+    axios({
+      method: 'get',
+      url: 'http://localhost:3000/api/v1/myrequests/',
+      headers: {
+        'access-token': localStorage.getItem('access-token'),
+        'client': localStorage.getItem('client'),
+        'expiry': localStorage.getItem('expiry'),
+        'token-type': localStorage.getItem('token-type'),
+        'uid': localStorage.getItem('uid')
+      }
+    }).then(res => {
         const { data } = res; // json file
         console.log(data);
+
         this.setState({
           requests: data.requests
         });
@@ -103,22 +116,26 @@ class MyRequestsPage extends Component {
               <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
             </div>
             <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-              <div style={{height: '100px', display: 'inline-block'}}>Image here</div>
+              <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} alt="album image" src={request.album_pic}/></div>
 
               <div style={{verticalAlign: 'top', display: 'inline-block'}}>
               <div style={{verticalAlign: 'top'}}>
-              <span style={{marginLeft: 7, fontWeight: 400}}>Album: Name</span>
+              <span style={{marginLeft: 7, fontWeight: 400}}>Album: {request.album_name}</span>
               <br></br>
-              <span style={{marginLeft: 7}}>Price: $123</span>
+              <span style={{marginLeft: 7}}>Total Price: ${request.total_price}</span>
               <br></br>
-              <span style={{marginLeft: 7}}>Sold By: Seller 123</span>
+              <span style={{marginLeft: 7}}>Sold By: {request.seller_name}</span>
               </div>
-              <div style={{marginTop: 35, marginLeft: 7}}>
+              <div style={{marginTop: 20, marginLeft: 7}}>
               <span style={{marginRight: 7}}><MuiThemeProvider theme={theme}>
-                <Button size="small" variant="raised" color="primary" className={classes.margin}>
-                  Pay Now
-                </Button>
-              </MuiThemeProvider></span>
+                <Checkout
+                  name={'Pay Now'}
+                  description={'Kpop'}
+                  amount={1}
+                  request_id={request.id}
+                />
+
+                    </MuiThemeProvider></span>
               <span><Button size="small" variant="raised" href="#flat-buttons" color="tertiary" className={classes.margin}>
                 Remove
               </Button></span>

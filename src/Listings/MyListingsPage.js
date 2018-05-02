@@ -75,15 +75,24 @@ class MyListingsPage extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3000/api/v1/mylistings/')
-      .then(res => {
-        const { data } = res; // json file
-        console.log(data);
-        this.setState({
-          arg: {hello: "hello"},
-          listings: data.listings
+      axios({
+        method: 'get',
+        url: 'http://localhost:3000/api/v1/mylistings/',
+        headers: {
+          'access-token': localStorage.getItem('access-token'),
+          'client': localStorage.getItem('client'),
+          'expiry': localStorage.getItem('expiry'),
+          'token-type': localStorage.getItem('token-type'),
+          'uid': localStorage.getItem('uid')
+        }
+      }).then(res => {
+          const { data } = res; // json file
+          console.log(data);
+
+          this.setState({
+            listings: data.listings
+          });
         });
-      });
   }
 
   render() {
@@ -102,7 +111,7 @@ class MyListingsPage extends Component {
               <span style={{fontWeight: 400, paddingTop: 10}}># of Pending Requests</span>
             </div>
             <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200}}>
-              <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} src={listing.album_pic}/></div>
+              <div style={{height: '100px', display: 'inline-block'}}><img style={{ maxHeight: '100%', maxWidth: '100%'}} alt="album image" src={listing.album_pic}/></div>
 
               <div style={{verticalAlign: 'top', display: 'inline-block'}}>
               <div style={{verticalAlign: 'top'}}>

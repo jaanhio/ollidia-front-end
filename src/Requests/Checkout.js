@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 import StripeCheckout from 'react-stripe-checkout';
-
+import { baseLink } from '../link';
 // import STRIPE_PUBLISHABLE from './constants/stripe';
 // import PAYMENT_SERVER_URL from './constants/server';
 
@@ -19,7 +19,7 @@ const errorPayment = data => {
 };
 
 const onToken = (amount, description, request_id) => token =>
-  axios.post(`http://localhost:3000/api/v1/requests/${request_id}/charge`,
+  axios.post(`${baseLink}/api/v1/requests/${request_id}/charge`,
     {
       description,
       source: token.id,

@@ -11,6 +11,8 @@ import green from 'material-ui/colors/green';
 import yellow from 'material-ui/colors/yellow';
 import purple from 'material-ui/colors/purple';
 
+import { baseLink } from '../link';
+
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -68,7 +70,7 @@ class MyListingsPage extends Component {
   componentDidMount() {
       axios({
         method: 'get',
-        url: 'http://localhost:3000/api/v1/mylistings/',
+        url: baseLink + '/api/v1/mylistings/',
         headers: {
           'access-token': localStorage.getItem('access-token'),
           'client': localStorage.getItem('client'),

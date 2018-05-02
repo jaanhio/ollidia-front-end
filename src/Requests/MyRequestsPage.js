@@ -14,7 +14,7 @@ import yellow from 'material-ui/colors/yellow';
 import purple from 'material-ui/colors/purple';
 
 import Checkout from './Checkout';
-// import StripeCheckout from 'react-stripe-checkout';
+import { baseLink } from '../link';
 
 const styles = theme => ({
   container: {
@@ -73,7 +73,7 @@ class MyRequestsPage extends Component {
   componentDidMount() {
     axios({
       method: 'get',
-      url: 'http://localhost:3000/api/v1/myrequests/',
+      url: baseLink + '/api/v1/myrequests/',
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

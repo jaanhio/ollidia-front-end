@@ -145,7 +145,7 @@ class ProfilePage extends Component {
     formPayLoad.append('uploaded_avatar', files[0])
     axios({
       method: 'post',
-      url: 'http://localhost:3000/api/v1/users/avatar',
+      url: baseLink + '/api/v1/users/avatar',
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),
@@ -182,7 +182,7 @@ class ProfilePage extends Component {
   getUserInfo = () => {
     axios({
       method: 'get',
-      url: `http://localhost:3000/api/v1/users/info`,
+      url: baseLink + `/api/v1/users/info`,
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),
@@ -204,8 +204,6 @@ class ProfilePage extends Component {
 
     axios({
       method: 'get',
-      // url: 'http://localhost:3000/api/v1/myrequests/',
-      // url: '/api/v1/myrequests/',
       url: `${baseLink}/api/v1/myrequests`,
       headers: {
         'access-token': localStorage.getItem('access-token'),

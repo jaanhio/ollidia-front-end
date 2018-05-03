@@ -29,5 +29,5 @@
     "predeploy": "CI=false yarn run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "http://ollida.club"
+  "homepage": "http://ollida.club/"
 }

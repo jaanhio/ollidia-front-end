@@ -11,6 +11,7 @@ import green from 'material-ui/colors/green';
 import yellow from 'material-ui/colors/yellow';
 import purple from 'material-ui/colors/purple';
 import Checkout from '../Requests/Checkout';
+import Request from './Request'
 
 const PageWrapper = styled.main`
   position: relative;
@@ -29,22 +30,7 @@ const Header = styled.h3`
   font-weight: 300;
   margin-left: 17px;
 `
-
 const styles = theme => ({
-  nomineeAvatar: {
-    width: 80,
-    height: 80,
-  },
-  paper: {
-    position: 'absolute',
-    width: '70vw',
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
   button: {
     margin: theme.spacing.unit,
   }
@@ -99,42 +85,31 @@ class OrdersTab extends Component {
     const renderApprovedRequests = approved_requests ? (
       approved_requests.map((request, index) => {
         return (
-
-          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
-              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
-              <span style={{ float: 'right' }}>ID: #{request.id}</span>
-              <br></br>
-              <span style={{ fontWeight: 400, paddingTop: 10 }}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
+          <Request
+            createdAt={request.created_at}
+            requestId={request.id}
+            totalPrice={request.total_price}
+            quantity={request.quantity}
+            albumPic={request.album_pic}
+          >
+            <div style={{ marginLeft: 7 }}>
+              <span style={{ padding: 0, marginRight: 7 }}>
+                <MuiThemeProvider theme={theme}>
+                  <Checkout
+                    name={'Pay Now'}
+                    description={'Kpop'}
+                    amount={request.total_price}
+                    request_id={request.id}
+                  />
+                </MuiThemeProvider>
+              </span>
+              <span>
+                <IconButton style={{ padding: 0, marginLeft: -8, marginRight: -8 }} aria-label="delete" className={classes.button}>
+                  <DeleteIcon size="small" />
+                </IconButton>
+              </span>
             </div>
-            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
-              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={request.album_pic} /></div>
-
-              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
-                <div style={{ verticalAlign: 'top' }}>
-                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
-                  <br></br>
-                  <span style={{ marginLeft: 7 }}>Price: $123</span>
-                  <br></br>
-                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
-                </div>
-                <div style={{ marginLeft: 7 }}>
-                  <span style={{ padding: 0, marginRight: 7 }}><MuiThemeProvider theme={theme}>
-                    <Checkout
-                      name={'Pay Now'}
-                      description={'Kpop'}
-                      amount={request.total_price}
-                      request_id={request.id}
-                    />
-                  </MuiThemeProvider></span>
-                  <span><IconButton style={{ padding: 0, marginLeft: -8, marginRight: -8 }} aria-label="delete" className={classes.button}>
-                    <DeleteIcon size="small" />
-                  </IconButton></span>
-                </div>
-              </div>
-
-            </div>
-          </div>
+          </Request>
         )
       })
     ) : (
@@ -147,39 +122,28 @@ class OrdersTab extends Component {
     const renderUnApprovedRequests = unapproved_requests ? (
       unapproved_requests.map((request, index) => {
         return (
-
-          <div style={{ margin: '20px 20px', backgroundColor: 'white' }}>
-            <div style={{ height: '45px', textAlign: 'left', padding: '10px 10px 0px 10px', backgroundColor: '#CFD8DC' }}>
-              <span style={{ marginBottom: 5 }}>Request Placed: {request.created_at}</span>
-              <span style={{ float: 'right' }}>ID: #{request.id}</span>
-              <br></br>
-              <span style={{ fontWeight: 400, paddingTop: 10 }}>Total Charge: ${request.total_price}, Quantity: {request.quantity}</span>
+          <Request
+            createdAt={request.created_at}
+            requestId={request.id}
+            totalPrice={request.total_price}
+            quantity={request.quantity}
+            albumPic={request.album_pic}
+          >
+            <div style={{ marginLeft: 7 }}>
+              <span style={{ marginRight: 7 }}>
+                <MuiThemeProvider theme={theme}>
+                  <Button size="small" variant="raised" color="secondary" className={classes.margin}>
+                    Edit
+                  </Button>
+                </MuiThemeProvider>
+              </span>
+              <span>
+                <IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
+                  <DeleteIcon size="small" />
+                </IconButton>
+              </span>
             </div>
-            <div style={{ height: '105px', textAlign: 'left', verticalAlign: 'bottom', padding: 10, fontWeight: 200 }}>
-              <div style={{ height: '100px', display: 'inline-block' }}><img style={{ maxHeight: '100%', maxWidth: '100%' }} src={request.album_pic} /></div>
-
-              <div style={{ verticalAlign: 'top', display: 'inline-block' }}>
-                <div style={{ verticalAlign: 'top' }}>
-                  <span style={{ marginLeft: 7, fontWeight: 400 }}>Album: Name</span>
-                  <br></br>
-                  <span style={{ marginLeft: 7 }}>Price: $123</span>
-                  <br></br>
-                  <span style={{ marginLeft: 7 }}>Sold By: Seller 123</span>
-                </div>
-                <div style={{ marginLeft: 7 }}>
-                  <span style={{ marginRight: 7 }}><MuiThemeProvider theme={theme}>
-                    <Button size="small" variant="raised" color="secondary" className={classes.margin}>
-                      Edit
-                </Button>
-                  </MuiThemeProvider></span>
-                  <span><IconButton style={{ padding: 0, marginLeft: -5, marginRight: -5 }} aria-label="delete" className={classes.button}>
-                    <DeleteIcon size="small" />
-                  </IconButton></span>
-                </div>
-              </div>
-
-            </div>
-          </div>
+          </Request>
         )
       })
     ) : (

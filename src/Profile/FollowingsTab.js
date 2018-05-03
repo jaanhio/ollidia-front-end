@@ -118,7 +118,7 @@ class FollowingsTab extends Component {
 
   render() {
     const { classes } = this.props;
-    const { value, followings } = this.state;
+    const { followings } = this.state;
 
     const renderFollowings = followings.length !== 0 ? (
       followings.map((following, index) => {

@@ -15,7 +15,9 @@ import RegistrationPage from './Registration/RegistrationPage';
 import SuccessPage from './components/SuccessPage';
 import ProfilePage from './Profile/ProfilePage';
 import Footer from './components/Footer';
+
 import { Switch, Route } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import axios from 'axios';
 import { baseLink } from './link';
 
